@@ -1,0 +1,12 @@
+{
+    "name": "snippets.ariatemplates.com",
+    "version": "0.0.0",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/ariatemplates/snippets.ariatemplates.com.git"
+    },
+    "dependencies": {
+        "express": "~2.5.11"
+    }
+}
