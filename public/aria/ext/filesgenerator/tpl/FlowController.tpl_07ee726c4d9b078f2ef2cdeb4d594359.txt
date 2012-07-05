@@ -1,0 +1,27 @@
+{TextTemplate {$classpath: 'aria.ext.filesgenerator.tpl.FlowController'}}
+{macro main()}
+${(function(){
+	var superClassName = data.$extends.split(".");			
+	data.superClassName = "\$" + superClassName[superClassName.length-1];			
+})()}
+/\**
+ * ${data.$description}
+ * @class ${data.$classpath}
+ * @extends ${data.$extends}
+ */
+Aria.classDefinition(\{
+	\$classpath : "${data.$classpath}",
+	\$extends : "${data.$extends}",{if data.$dependencies}
+	\$dependencies : [{foreach d in data.$dependencies}{separator}, {/separator}"${d}"{/foreach}],{/if}
+	\$implements : ["${data.$publicInterface}"{if data.$implements}{foreach i in data.$implements}, "${i}"{/foreach}{/if}],
+	\$constructor : function () \{
+		this.${data.superClassName}.constructor.call(this);
+	\},
+	\$destructor : function () \{
+		this.${data.superClassName}.$destructor.call(this);
+	\},
+	\$prototype : \{
+		\$publicInterfaceName : "${data.$publicInterface}"
+	\}
+\});{/macro}
+{/TextTemplate}

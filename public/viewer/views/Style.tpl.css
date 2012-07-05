@@ -1,0 +1,160 @@
+{CSSTemplate {
+	$classpath: 'viewer.views.Style'
+}}
+
+	{macro main()}
+
+		{call header()/}
+		{call content()/}
+		{call datamodel()/}
+		{call sources()/}
+		{call source()/}
+	{/macro}
+
+	{macro header()}
+		.header {
+			position: relative;
+		}
+
+		.header h5 {
+			color: #5092BD;
+			margin-bottom: 5px;
+			padding-right: 100px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.header h5 strong {
+			text-transform: uppercase;
+			color: #666;
+		}
+
+		.actions {
+			position: absolute;
+			right: 4px;
+			top: -4px;
+			overflow: hidden;
+		}
+
+		.actions div {
+			float: left;
+			display: block;
+			width: 20px;
+			height: 20px;
+			background-position: center center;
+			background-repeat: no-repeat;
+			cursor: pointer;
+		}
+
+		.actions .sources 	{ background-image: url(${cssFolderPath}/images/script_code.png) }
+		.actions .data 		{ background-image: url(${cssFolderPath}/images/database_yellow.png) }
+		.actions .download 	{ background-image: url(${cssFolderPath}/images/compress.png) }
+		.actions .run 		{ background-image: url(${cssFolderPath}/images/control_play.png) }
+		.actions .run:hover { background-image: url(${cssFolderPath}/images/control_play_blue.png) }
+	{/macro}
+
+	{macro content()}
+		{call callout()/}
+
+		.content {
+			padding: 5px;
+			overflow: hidden;
+		}
+
+		.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+			color: black;
+			font-family: "Helvetica Neue",Arial,"Lucida Grande",sans-serif;
+		}
+
+		.content h1 { font-size: 16px; margin: 10px 0; }
+		.content h2 { font-size: 14px; margin: 8px 0;}
+		.content h3 { font-size: 12px; margin: 8px 0;}
+		.content h4 { font-size: 12px; margin: 5px 0;}
+		.content h5 { font-size: 11px; margin: 5px 0;}
+
+		.content h6 { margin-top: 0; font-weight: 400 }
+
+	{/macro}
+
+	{macro callout()}
+		.callout {
+			margin-top: -2px;
+			background-color: #EBE47B;
+			border-color: #C5BA2F;
+			color:#fff;
+		}
+	{/macro}
+
+	{macro source()}
+		.source {
+			position: relative;
+		}
+
+		.source .mw-geshi {
+			margin: -5px;
+		}
+
+		.source .mw-geshi > div {
+			overflow-y: auto;
+			max-height: 400px;
+		}
+
+		.source h6 {
+			color: #444;
+			margin: 0;
+			padding: 2px 5px 4px;
+		}
+
+		.source .files {
+			position: absolute;
+			right: -1px;
+			top: 1px;
+			width: 20px;
+			height: 20px;
+			z-index: 5;
+			background-position: center center;
+			background-repeat: no-repeat;
+			cursor: pointer;
+			background-image: url(${cssFolderPath}/images/page_white_stack.png)
+		}
+	{/macro}
+
+	{macro datamodel()}
+		.datamodel pre {
+			font-family: 'Ubuntu Mono',monospace;
+			font-weight: normal;
+			color: #f8f8f8;
+		}
+
+		.datamodel .mw-geshi {
+			margin: -5px;
+		}
+	{/macro}
+
+	{macro sources()}
+		.sources ul { padding-left: 0 }
+		.sources ul li {
+			font-size: 11px;
+			padding: 2px 5px;
+			list-style-type: none;
+			cursor: pointer;
+			position: relative;
+			padding-left: 24px;
+			background: url(${cssFolderPath}/images/page_white_text.png) 5px center no-repeat;
+		}
+
+		.sources ul li.odd {
+			background-color: #F2F9FF;
+		}
+
+		.sources ul li .type {
+			color: #a1a1a1;
+			position: absolute;
+			right: 5px;
+		}
+
+	{/macro}
+
+
+
+{/CSSTemplate}
