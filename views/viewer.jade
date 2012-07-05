@@ -1,0 +1,52 @@
+!!! 5
+html
+  head
+    title Aria Templates Sample: #{title}
+    link(href='/css/webfonts.css', rel='stylesheet')
+    link(href='/css/style.css', rel='stylesheet')
+    script(type='text/javascript', src='/aria/ariatemplates-#{ariatemplates}.js')
+    script(type='text/javascript', src='/aria/css/atskin-#{ariatemplates}.js')
+    script(type='text/javascript')
+      aria.core.AppEnvironment.setEnvironment({
+        defaultWidgetLibs: {
+          aria: "aria.widgets.AriaLib",
+          html: "aria.html.HtmlLibrary"
+        }
+      });
+
+      aria.core.IOFiltersMgr.addFilter({
+        'classpath': 'viewer.ViewerFilter',
+        'initArgs': {
+          'rootmap': "#{rootmap}",
+          'sample_folder': "#{sample_folder}"
+        }
+      });
+    style(type="text/css")
+      .live { margin: 0 10px }
+      .live  div.content {
+        min-height: 150px;
+        max-height: 250px;
+        overflow: auto;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0 0 15px 0;
+        border-radius: 4px 0 0 4px;
+        border: 1px solid white;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+      }
+  body
+    div(id=sample_id, class="live")
+    script(type="text/javascript")
+      Aria.loadTemplate({
+        classpath: 'viewer.views.Main',
+        div: "#{sample_id}",
+        moduleCtrl: {
+          'classpath': "viewer.ViewerCtrl",
+          'initArgs': {
+            'yaml': !{yaml},
+            'sample_folder': "#{sample_folder}"
+          }
+        }
+      });
