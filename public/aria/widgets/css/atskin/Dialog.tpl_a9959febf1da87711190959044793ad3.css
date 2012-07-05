@@ -1,0 +1,48 @@
+
+
+{CSSTemplate {
+	$classpath : "aria.widgets.css.atskin.Dialog"
+}}
+
+{macro main()}
+
+.xDialog_titleBar {
+	position:absolute;
+}
+.xDialog_icon {
+	float:left;
+}
+.xDialog_title {
+	float:left;
+}
+.xDialog_close {
+	float:right;
+	cursor:pointer;
+
+}
+
+/* Dialog classes */
+.xDialog_std_titleBar {
+	top:0px;
+	left:0px;
+	right:10px;
+	height:32px;
+}
+.xDialog_std_title {
+	padding-left: 6px;
+	padding-top: 6px;
+	color:#615E55;
+	font-weight:bold;
+}
+.xDialog_std_icon {
+	padding-left: 6px;
+	padding-top: 6px;
+}
+.xDialog_std_close {
+	padding-right: 6px;
+	padding-top: 6px;
+}
+
+
+{/macro}
+{/CSSTemplate}

@@ -7,6 +7,9 @@
         "url": "git://github.com/ariatemplates/snippets.ariatemplates.com.git"
     },
     "dependencies": {
-        "express": "~2.5.11"
+        "express": "~2.5.11",
+        "jade": "~0.26.3",
+        "uglify-js": "~1.3.2",
+        "js-yaml": "~1.0.0"
     }
 }

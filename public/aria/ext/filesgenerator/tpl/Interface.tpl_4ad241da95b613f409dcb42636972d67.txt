@@ -1,0 +1,11 @@
+{TextTemplate {$classpath: 'aria.ext.filesgenerator.tpl.Interface'}}
+{macro main()}/\**
+ * ${data.$description}
+ * @class ${data.$classpath}
+ */
+Aria.interfaceDefinition(\{
+	\$classpath : "${data.$classpath}",{if data.$extends}
+	\$extends : "${data.$extends}",{/if}
+	\$interface : \{\}
+\});{/macro}
+{/TextTemplate}
