@@ -9,6 +9,7 @@ if [ "$1" = "start" ]; then
     else
         echo "~ starting snippets-at daemon."
         nohup node $SERVER_PATH > /dev/null 2>&1 &
+        echo $! > $PID_FILE
     fi
 elif [ "$1" = "stop" ]; then
     if [ ! -e $PID_FILE ]; then

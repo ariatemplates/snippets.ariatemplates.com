@@ -19,6 +19,6 @@ app.get('/samples/github.com/:user/:repo/:folder([/\\-_a-zA-Z0-9]+)', samples.on
 app.get('/code/github.com/:user/:repo/:file([/\\-._a-zA-Z0-9]+.[a-zA-Z]+)', code.onRequest);
 
 
-process.title ="snippets.ariatemplates.com";
+//process.title ="snippets.ariatemplates.com";
 app.listen(3000);
 console.log("Server %s listening at http://localhost:3000/", process.title);
