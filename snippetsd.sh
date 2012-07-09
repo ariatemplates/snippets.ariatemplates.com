@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PID_FILE="/tmp/snippets-at.pid"
+PID_FILE="/tmp/snippetsd.pid"
 SERVER_PATH="$PWD/server.js"
 
 if [ "$1" = "start" ]; then
