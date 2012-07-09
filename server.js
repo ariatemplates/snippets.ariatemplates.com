@@ -1,4 +1,5 @@
 var express = require('express');
+var fs = require('fs');
 
 var snippets = require('./routes/snippets');
 var samples = require('./routes/samples');
