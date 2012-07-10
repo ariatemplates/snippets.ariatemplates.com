@@ -46,11 +46,7 @@ exports.onRequest = function(req, res){
 
 	function request(callback) {
 		var query = Url.parse(req.url, true).query;
-
-		var url, repo;
-
-		url = "https://raw.github.com/" + req.params.user + "/" + req.params.repo + "/master/" + req.params.file;
-		repo = "git://github.com/" + req.params.user + "/" + req.params.repo + ".git";
+		var url = "https://raw.github.com/" + req.params.user + "/" + req.params.repo + "/master/" + req.params.file;
 
 		grabber.httpCat(url, function (err, data) {
 			if (err) return callback(err);
@@ -81,16 +77,16 @@ exports.onRequest = function(req, res){
 			if (query.lang) {
 				html = hljs.highlight(query.lang, code).value;
 			} else {
-				var extension = Path.extname(req.params.file).substr(1);
+				var extension = Path.extname(req.params.file);
 				var html;
 
 				switch(extension) {
-					case 'js':
-					case 'tpl':
-					case 'tml':
+					case '.js':
+					case '.tpl':
+					case '.tml':
 						html = hljs.highlight("at", code).value;
 						break;
-					case 'css':
+					case '.css':
 						if (req.params.file.indexOf(".tpl.css") != -1) {
 							html = hljs.highlight("at", code).value;
 						} else {
@@ -102,8 +98,12 @@ exports.onRequest = function(req, res){
 						break;
 				}
 			}
-
-			var url = "http://" + req.headers.host + req.url;
+			var proxy_mode = req.header('x-forwarded-host'), url;
+			if (proxy_mode) {
+				url = "http://" + proxy_mode + req.url;
+			} else {
+				url = "http://" + req.headers.host + req.url;
+			}
 			var name = req.params.file;
 			var js = createSnippet(url, name, html);
 			callback(null, js);
@@ -113,15 +113,15 @@ exports.onRequest = function(req, res){
 	// Generate a custom compressed version of insertSnippet for the browser
 	function createSnippet(url, name, html) {
 		var compressedHTML = html.replace(/<span class=/g, "<@").replace(/span>/g, "@>");
-		var extension = Path.extname(url).substr(1);
+		var extension = Path.extname(req.params.file);
 		var codeClass = "";
 		switch (extension) {
-			case 'js': codeClass="javascript";break;
-			case 'tpl':
-			case 'tml': codeClass="at";break;
-			case 'css': codeClass="css";break;
-			case 'html': codeClass="html";break;
-			default: codeClass="";break;
+			case '.js': codeClass = "javascript"; break;
+			case '.tpl':
+			case '.tml': codeClass = "at"; break;
+			case '.css': codeClass = "css"; break;
+			case '.html': codeClass = "html"; break;
+			default: codeClass = ""; break;
 		}
 
 		var js = "(" + insertSnippet.toString() + ")" +
