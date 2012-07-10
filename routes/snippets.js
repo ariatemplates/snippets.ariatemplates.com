@@ -11,7 +11,7 @@ exports.onRequest = function(req, res){
 	var key =req.url;
 
 	if (cache[key]) {
-		console.log("File already in cache");		
+		console.log("File already in cache");
 		send(cache[key]);
 		if (!pending[key]) {
 			pending[key] = true;
@@ -31,7 +31,7 @@ exports.onRequest = function(req, res){
 					err = new Error(err);
 				}
 				throw err;
-				return;			
+				return;
 			}
 			cache[key] = js;
 			send(js);
@@ -41,7 +41,7 @@ exports.onRequest = function(req, res){
 	function send(js) {
 		res.header("Content-Type", "application/javascript");
 		res.header("Content-Length", Buffer.byteLength(js));
-		res.end(js);		
+		res.end(js);
 	}
 
 	function request(callback) {
@@ -61,30 +61,46 @@ exports.onRequest = function(req, res){
 			if (lineend) lines.length = lineend;
 			if (linestart) lines = lines.slice(linestart - 1);
 
-			var code = lines.join("\n");			
+			var code = lines.join("\n");
 
 			// Unindent block if needed
-			var min = Infinity;
-			lines.forEach(function (line) {
-				var match = line.match(/^ */);
-				var i = match[0].length;
-				if (i < min) min = i;
-			});
-			if (min && min < Infinity) {
-				lines = lines.map(function (line) {
-					return line.substr(min);
+			if (query.outdent) {
+				var min = Infinity;
+				lines.forEach(function (line) {
+					var match = line.match(/^ */);
+					var i = match[0].length;
+					if (i < min) min = i;
 				});
+				if (min && min < Infinity) {
+					lines = lines.map(function (line) {
+						return line.substr(min);
+					});
+				}
 			}
 
-			var extension = Path.extname(req.url).substr(1);
-			var html;
-			
-			switch(extension) {
-				case 'js':
-				case 'tpl':
-				case 'css':
-				case 'tml': html=hljs.highlight("at", code).value;break;
-				default: break;	
+			if (query.lang) {
+				html = hljs.highlight(query.lang, code).value;
+			} else {
+				var extension = Path.extname(req.params.file).substr(1);
+				var html;
+
+				switch(extension) {
+					case 'js':
+					case 'tpl':
+					case 'tml':
+						html = hljs.highlight("at", code).value;
+						break;
+					case 'css':
+						if (req.params.file.indexOf(".tpl.css") != -1) {
+							html = hljs.highlight("at", code).value;
+						} else {
+							html = hljs.highlight("css", code).value;
+						}
+						break;
+					default:
+						html = hljs.highlightAuto(code).value;
+						break;
+				}
 			}
 
 			var url = "http://" + req.headers.host + req.url;
@@ -175,7 +191,7 @@ exports.onRequest = function(req, res){
 			        		"class": codeClass}
 			        	, new Html(html)]
 			      	]
-		    	]	
+		    	]
 	    	} else {
 	    		var json = ["div", {"class":"snippet"},
 		      		["pre", {"class":"prettyprint"},
@@ -188,7 +204,7 @@ exports.onRequest = function(req, res){
 			      	]
 		    	]
 	    	}
-	    		    	
+
 	    	var snippet = jsonML(json);
 
 	    	// Replace script tag with the snippet
