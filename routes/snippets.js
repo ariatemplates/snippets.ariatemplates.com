@@ -52,12 +52,47 @@ exports.onRequest = function(req, res){
 			if (err) return callback(err);
 
 			var lines = data.split("\n");
-			var linestart = parseInt(query.linestart, 10) || 0;
-			var lineend = parseInt(query.lineend, 10) || 0;
-			if (lineend) lines.length = lineend;
-			if (linestart) lines = lines.slice(linestart - 1);
+			if (query.tag) {
+				// extract code between tag				
 
-			var code = lines.join("\n");
+				var arr = [];
+				var re = new RegExp("\/{2} ?\/{2}#" + query.tag + "$", "i");
+				var i = 0;
+				var positions = [];
+
+				lines.forEach(function (line) {
+					i++;					
+					if (line.match(re))
+						positions.push(i);
+				});
+
+				if (positions.length == 2) {
+					var start = positions[0];
+					var end = positions[1];
+
+					lines.length = end - 1;
+					lines = lines.slice(start);
+				}
+				var code = lines.join("\n");
+			} else {
+				// skip tags and check for linestart and lineend
+				var arr = [];
+				lines.forEach(function (line) {
+					if (line.match(/\/{2} ?\/{2}#.*/) == null)
+						arr.push(line);					
+				});
+				var code = arr.join("\n");
+
+				if (query.linestart && query.lineend) {
+					lines = code.split("\n");
+					var linestart = parseInt(query.linestart, 10) || 0;
+					var lineend = parseInt(query.lineend, 10) || 0;
+					if (lineend) lines.length = lineend;
+					if (linestart) lines = lines.slice(linestart - 1);
+
+					code = lines.join("\n");
+				}
+			}
 
 			// Unindent block if needed
 			if (query.outdent) {
