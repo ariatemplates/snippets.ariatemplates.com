@@ -208,6 +208,11 @@ exports.onRequest = function(req, res){
 		};
 
 		var tags = document.getElementsByTagName("script");
+
+		var tmp = name.split("/");		
+		tmp.splice(0,2);
+		name = tmp.join("/");
+
 		for (var i = 0, l = tags.length; i < l; i++) {
 	    	var tag = tags[i];
 	    	var src = tag.getAttribute('src');
@@ -216,12 +221,11 @@ exports.onRequest = function(req, res){
 	    	var html = compressedHTML.replace(/<@/g, "<span class=").replace(/@>/g, "span>");
 	    	if (codeClass != "") {
 	    		var json = ["div", {"class":"snippet"},
-		      		["pre", {"class":"prettyprint"},
-			        	["a", {
-			          	"style": "float:right;",
-			          	"class": "filename",
-			         	 "href": "#",
-			        	}, name],
+	    			["h5", {
+			          	"class": "filename"
+			        	}, 
+			        	["strong", "FILE"], "/" + name],
+		      		["pre", {"class":"prettyprint"},			        	
 			        	["code", {
 			        		"class": codeClass}
 			        	, new Html(html)]
@@ -229,12 +233,11 @@ exports.onRequest = function(req, res){
 		    	]
 	    	} else {
 	    		var json = ["div", {"class":"snippet"},
-		      		["pre", {"class":"prettyprint"},
-			        	["a", {
-			          	"style": "float:right;",
-			          	"class": "filename",
-			         	 "href": "#",
-			        	}, name],
+	    			["h5", {
+			          	"class": "filename"
+			        	}, 
+			        	["strong", "FILE"], "/" + name],
+		      		["pre", {"class":"prettyprint"},			        	
 			        	["code", new Html(html)]
 			      	]
 		    	]
