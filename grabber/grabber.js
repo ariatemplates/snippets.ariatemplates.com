@@ -3,7 +3,7 @@ var Http = require('http'),
 	Url = require('url');
 
 exports.httpCat = function (url, callback) {
-	console.log("Loading remote file %s", url);
+	//console.log("Loading remote file %s", url);
 	var parts = Url.parse(url);
 
 	(parts.protocol === "https:" ? Https : Http).get(parts, function (response) {

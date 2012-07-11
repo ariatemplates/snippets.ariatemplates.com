@@ -113,7 +113,10 @@
 			{if ($data.sources.length > 1)}
 				<div class="files" title="View the other files" {on click "sources"/}></div>
 			{/if}
-			${$data.loaded_sources[$data.selected_source]}
+			<h6>${getFileName($data.selected_source)}</h6>
+			<div class="highlight">
+				${$data.loaded_sources[$data.selected_source]}
+			</div>
 		{/if}
 	{/macro}
 

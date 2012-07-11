@@ -1,51 +1,55 @@
 var Url = require('url'),
-    Https = require('https');
+    Path = require('path'),
+    hljs = require('../highlight.js'),
+    grabber = require('../grabber/grabber');
 
+var cache = {};
+var pending = {};
 exports.onRequest = function(req, res){
   var user = req.params.user,
       repo = req.params.repo,
-      file = req.params.file;
+      file = req.params.file,
+      url_parts = Url.parse(req.url, true),
+      query = url_parts.query,
+      url = "https://raw.github.com/" + user + "/" + repo + "/master/" + file,
+      key = url;
 
-  var url = "https://raw.github.com/" + user + "/" + repo + "/master/" + file;
-  httpCat(url, function(err, data) {
-    if (err)  {
-      throw err;
-      return;
-    }
-
-    parts = Url.parse(url);
-    if (isCssTpl(parts.pathname)) {
-      data = handleImagesPath(data, user, repo, file);
-    }
-    res.header("Content-Type", mimeType(file));
-    res.header("Content-Length", Buffer.byteLength(data));
-    res.send(data);
-  });
-
-  function httpCat(url, callback) {
-    var parts = Url.parse(url);
-    Https.get(parts, function (response) {
-      if (response.statusCode !== 200) {
-        var err = new Error("Problem getting code from Github.\n" + url +
-          "\n" + JSON.stringify(response.headers));
-        if (response.statusCode === 404) {
-          err.code = "ENOENT"
+  if (cache[key]) {
+    var data = highlight(cache[key]);
+    send(data);
+    if (!pending[key]) {
+      pending[key] = true;
+      request(function (err, data) {
+        delete pending[key];
+        if (!err) {
+          cache[key] = data;
         }
-        return callback(err);
+      });
+    }
+  } else {
+    request(function (err, data) {
+      if (err) {
+        if (!(err instanceof Error)) {
+          err = new Error(err);
+        }
+        throw err;
+        return;
       }
-      response.setEncoding('utf8');
-      var data = "";
-      response.on('data', function(chunk) {
-        data += chunk;
-      });
-      response.on('end', function() {
-        callback(null, data);
-      });
-    }).on('error', function(err) {
-      callback(err);
+      cache[key] = data;
+      data = highlight(data);
+      send(data);
     });
   }
 
+  function request(callback) {
+    grabber.httpCat(url, callback);
+  }
+
+  function send(data) {
+    res.header("Content-Type", mimeType(req.params.file));
+    res.header("Content-Length", Buffer.byteLength(data));
+    res.end(data);
+  }
 
   function handleImagesPath(text, user, repo, file) {
     var path = file.split("/");
@@ -78,5 +82,17 @@ exports.onRequest = function(req, res){
 
   function isCssTpl(path) {
     return path.indexOf(".tpl.css") === (path.length - ".tpl.css".length);
+  }
+
+  function highlight(data) {
+    if (!query.highlight && isCssTpl(url_parts.pathname)) {
+      data = handleImagesPath(data, user, repo, file);
+    }
+    if (query.highlight) {
+      var lang = query.lang || "at";
+      data = hljs.highlight(lang, data).value;
+      data = "<pre class='prettyprint'><code class=''>" + data + "</code></pre>";
+    }
+    return data;
   }
 };

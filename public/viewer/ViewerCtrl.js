@@ -91,7 +91,7 @@ Aria.classDefinition({
 			var path = this.sample_path + '/' + file;
 			aria.core.IO.asyncRequest({
 				sender: this.$classpath,
-				url: path,
+				url: path + "?highlight=true&lang=at",
 				callback: {
 					fn: this.__onFilePreloaded,
 					scope: this,

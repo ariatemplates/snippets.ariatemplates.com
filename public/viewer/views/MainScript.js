@@ -96,6 +96,14 @@ Aria.tplScriptDefinition({
 		source: function(evt, file) {
 			this.moduleCtrl.setSelectedSource(file);
 			aria.utils.Json.setValue(this.$data, "view", 'source');
+		},
+
+		/**
+		 * Returns the name of a file from a path
+		 * @param {String} a path to a file
+		 */
+		getFileName: function(path) {
+			return path.split("/").pop()
 		}
 	}
 });

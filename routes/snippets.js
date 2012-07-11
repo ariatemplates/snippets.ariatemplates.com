@@ -7,20 +7,20 @@ var Url = require('url'),
 var cache = {};
 var pending = {};
 exports.onRequest = function(req, res){
-	console.log("\n\ntrying to fetch %s", req.url);
+	//console.log("\n\ntrying to fetch %s", req.url);
 	var key =req.url;
 
 	if (cache[key]) {
-		console.log("File already in cache");
+		//console.log("File already in cache");
 		send(cache[key]);
 		if (!pending[key]) {
 			pending[key] = true;
-			console.log("invalidating the cache");
+			//console.log("invalidating the cache");
 			request(function (err, js) {
 				delete pending[key];
 				if (!err) {
 					cache[key] = js;
-					console.log("cache regenerated");
+					//console.log("cache regenerated");
 				}
 			});
 		}

@@ -21,10 +21,10 @@ app.get('/code/github.com/:user/:repo/:file([/\\-._a-zA-Z0-9]+.[a-zA-Z]+)', code
 
 
 //process.title ="snippets.ariatemplates.com";
-app.listen(3000);
+app.listen(3002);
 console.log("Server %s listening at http://localhost:3000/", process.title);
 
 process.on('uncaughtException', function (err) {
   console.log(err.stack);
 });
-fs.writeFileSync("/tmp/snippetsd.pid", process.pid.toString() + '\n', 'ascii');
+//fs.writeFileSync("/tmp/snippetsd.pid", process.pid.toString() + '\n', 'ascii');
