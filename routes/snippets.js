@@ -109,7 +109,9 @@ exports.onRequest = function(req, res){
 				}
 			}
 
-			if (query.lang) {
+			var supportedLang = ["1c", "actionscript", "apache", "at", "avrasm", "axapta", "bash", "clojure", "cmake", "coffeesc", "ript", "cpp", "cs", "css", "d", "delphi", "diff", "django", "dos", "erlang", "erlang-repl", "glsl", "go", "haskell", "http", "ini", "java", "javascript", "json", "lisp", "lua", "markdown", "matlab", "mel", "nginx", "objectivec", "parser3", "perl", "php", "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql", "tex", "vala", "vbscript", "vhdl", "xml"];
+
+			if ((query.lang) && (supportedLang.indexOf(query.lang) != -1)) {
 				html = hljs.highlight(query.lang, code).value;
 			} else {
 				var extension = Path.extname(req.params.file);
@@ -140,13 +142,13 @@ exports.onRequest = function(req, res){
 				url = "http://" + req.headers.host + req.url;
 			}
 			var name = req.params.file;
-			var js = createSnippet(url, name, html);
+			var js = createSnippet(url, name, html, query);
 			callback(null, js);
 		});
 	}
 
 	// Generate a custom compressed version of insertSnippet for the browser
-	function createSnippet(url, name, html) {
+	function createSnippet(url, name, html, query) {
 		var compressedHTML = html.replace(/<span class=/g, "<@").replace(/span>/g, "@>");
 		var extension = Path.extname(req.params.file);
 		var codeClass = "";
@@ -160,7 +162,7 @@ exports.onRequest = function(req, res){
 		}
 
 		var js = "(" + insertSnippet.toString() + ")" +
-		  "(" + JSON.stringify(url) + "," + JSON.stringify(name) + "," + JSON.stringify(compressedHTML) + "," + JSON.stringify(codeClass) + ");";
+		  "(" + JSON.stringify(url) + "," + JSON.stringify(name) + "," + JSON.stringify(compressedHTML) + "," + JSON.stringify(codeClass) + "," + JSON.stringify(query) + ");";
 		var ast = Uglify.parser.parse(js);
 		ast = Uglify.uglify.ast_mangle(ast);
 		ast = Uglify.uglify.ast_squeeze(ast);
@@ -168,7 +170,7 @@ exports.onRequest = function(req, res){
 		return js;
 	}
 
-	function insertSnippet(url, name, compressedHTML, codeClass) {
+	function insertSnippet(url, name, compressedHTML, codeClass, query) {
 		function Html(html) { this.html = html; }
 		function jsonML(json) {
 			// Render strings as text nodes
@@ -218,29 +220,26 @@ exports.onRequest = function(req, res){
 	    	var src = tag.getAttribute('src');
 	    	if (!(src && src.substr(src.length - url.length) === url)) continue;
 
-	    	var html = compressedHTML.replace(/<@/g, "<span class=").replace(/@>/g, "span>");
+	    	var html = compressedHTML.replace(/<@/g, "<span class=").replace(/@>/g, "span>");	    	
+	    	var json = [];
+
 	    	if (codeClass != "") {
-	    		var json = ["div", {"class":"snippet"},
-	    			["h5", {
-			          	"class": "filename"
-			        	}, 
-			        	["strong", "FILE"], "/" + name],
-		      		["pre", {"class":"prettyprint"},			        	
-			        	["code", {
-			        		"class": codeClass}
-			        	, new Html(html)]
-			      	]
-		    	]
+	    		json = [
+    					"div",
+    					{"class":"snippet"},	    					
+	      				["pre", {"class":"prettyprint"}, ["code", {"class": codeClass}, new Html(html)]]
+	    			];
 	    	} else {
-	    		var json = ["div", {"class":"snippet"},
-	    			["h5", {
-			          	"class": "filename"
-			        	}, 
-			        	["strong", "FILE"], "/" + name],
-		      		["pre", {"class":"prettyprint"},			        	
-			        	["code", new Html(html)]
-			      	]
-		    	]
+    			json = [
+    					"div",
+    					{"class":"snippet"},
+	      				["pre", {"class":"prettyprint"}, ["code", new Html(html)]]
+	    			];
+	    	}
+
+	    	if (query && !query.noheader) {
+	    		var snippetHeader = ["h5", {"class": "filename"}, ["strong", "FILE"], "/" + name];
+	    		json.splice(2, 0, snippetHeader);
 	    	}
 
 	    	var snippet = jsonML(json);

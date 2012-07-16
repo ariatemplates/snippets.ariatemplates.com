@@ -625,7 +625,7 @@ var hljs = new function() {
     begin: '//', end: '$'
   };
   this.C_BLOCK_COMMENT_MODE = {
-    className: 'commentBlock',
+    className: 'comment',
     begin: '/\\*', end: '\\*/'
   };
   this.HASH_COMMENT_MODE = {
@@ -659,11 +659,57 @@ var hljs = new function() {
     return result;
   }
 }();
+hljs.LANGUAGES['1c'] = require('./1c.js')(hljs);
+hljs.LANGUAGES['actionscript'] = require('./actionscript.js')(hljs);
+hljs.LANGUAGES['apache'] = require('./apache.js')(hljs);
 hljs.LANGUAGES['at'] = require('./at.js')(hljs);
+hljs.LANGUAGES['avrasm'] = require('./avrasm.js')(hljs);
+hljs.LANGUAGES['axapta'] = require('./axapta.js')(hljs);
+hljs.LANGUAGES['bash'] = require('./bash.js')(hljs);
+hljs.LANGUAGES['clojure'] = require('./clojure.js')(hljs);
+hljs.LANGUAGES['cmake'] = require('./cmake.js')(hljs);
+hljs.LANGUAGES['coffeescript'] = require('./coffeescript.js')(hljs);
+hljs.LANGUAGES['cpp'] = require('./cpp.js')(hljs);
+hljs.LANGUAGES['cs'] = require('./cs.js')(hljs);
 hljs.LANGUAGES['css'] = require('./css.js')(hljs);
+hljs.LANGUAGES['d'] = require('./d.js')(hljs);
+hljs.LANGUAGES['delphi'] = require('./delphi.js')(hljs);
+hljs.LANGUAGES['diff'] = require('./diff.js')(hljs);
+hljs.LANGUAGES['xml'] = require('./xml.js')(hljs);
+hljs.LANGUAGES['django'] = require('./django.js')(hljs);
+hljs.LANGUAGES['dos'] = require('./dos.js')(hljs);
+hljs.LANGUAGES['erlang-repl'] = require('./erlang-repl.js')(hljs);
+hljs.LANGUAGES['erlang'] = require('./erlang.js')(hljs);
+hljs.LANGUAGES['glsl'] = require('./glsl.js')(hljs);
+hljs.LANGUAGES['go'] = require('./go.js')(hljs);
+hljs.LANGUAGES['haskell'] = require('./haskell.js')(hljs);
+hljs.LANGUAGES['http'] = require('./http.js')(hljs);
+hljs.LANGUAGES['ini'] = require('./ini.js')(hljs);
+hljs.LANGUAGES['java'] = require('./java.js')(hljs);
 hljs.LANGUAGES['javascript'] = require('./javascript.js')(hljs);
 hljs.LANGUAGES['json'] = require('./json.js')(hljs);
-hljs.LANGUAGES['xml'] = require('./xml.js')(hljs);
+hljs.LANGUAGES['lisp'] = require('./lisp.js')(hljs);
+hljs.LANGUAGES['lua'] = require('./lua.js')(hljs);
 hljs.LANGUAGES['markdown'] = require('./markdown.js')(hljs);
+hljs.LANGUAGES['matlab'] = require('./matlab.js')(hljs);
+hljs.LANGUAGES['mel'] = require('./mel.js')(hljs);
+hljs.LANGUAGES['nginx'] = require('./nginx.js')(hljs);
+hljs.LANGUAGES['objectivec'] = require('./objectivec.js')(hljs);
+hljs.LANGUAGES['parser3'] = require('./parser3.js')(hljs);
+hljs.LANGUAGES['perl'] = require('./perl.js')(hljs);
 hljs.LANGUAGES['php'] = require('./php.js')(hljs);
+hljs.LANGUAGES['profile'] = require('./profile.js')(hljs);
+hljs.LANGUAGES['python'] = require('./python.js')(hljs);
+hljs.LANGUAGES['r'] = require('./r.js')(hljs);
+hljs.LANGUAGES['rib'] = require('./rib.js')(hljs);
+hljs.LANGUAGES['rsl'] = require('./rsl.js')(hljs);
+hljs.LANGUAGES['ruby'] = require('./ruby.js')(hljs);
+hljs.LANGUAGES['rust'] = require('./rust.js')(hljs);
+hljs.LANGUAGES['scala'] = require('./scala.js')(hljs);
+hljs.LANGUAGES['smalltalk'] = require('./smalltalk.js')(hljs);
+hljs.LANGUAGES['sql'] = require('./sql.js')(hljs);
+hljs.LANGUAGES['tex'] = require('./tex.js')(hljs);
+hljs.LANGUAGES['vala'] = require('./vala.js')(hljs);
+hljs.LANGUAGES['vbscript'] = require('./vbscript.js')(hljs);
+hljs.LANGUAGES['vhdl'] = require('./vhdl.js')(hljs);
 module.exports = hljs;
