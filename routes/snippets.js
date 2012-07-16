@@ -101,12 +101,13 @@ exports.onRequest = function(req, res){
 					var match = line.match(/^ */);
 					var i = match[0].length;
 					if (i < min) min = i;
-				});
+				});					
 				if (min && min < Infinity) {
-					lines = lines.map(function (line) {
+					lines = lines.map(function (line) {						
 						return line.substr(min);
 					});
 				}
+				code = lines.join("\n");
 			}
 
 			var supportedLang = ["1c", "actionscript", "apache", "at", "avrasm", "axapta", "bash", "clojure", "cmake", "coffeesc", "ript", "cpp", "cs", "css", "d", "delphi", "diff", "django", "dos", "erlang", "erlang-repl", "glsl", "go", "haskell", "http", "ini", "java", "javascript", "json", "lisp", "lua", "markdown", "matlab", "mel", "nginx", "objectivec", "parser3", "perl", "php", "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql", "tex", "vala", "vbscript", "vhdl", "xml"];
