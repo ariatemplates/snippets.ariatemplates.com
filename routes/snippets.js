@@ -52,10 +52,11 @@ exports.onRequest = function(req, res){
     grabber.httpCat(url, function (err, data) {
       if (err) return callback(err);
 
+      var code = "";
       var lines = data.split("\n");
+
       if (query.tag) {
         // extract code between tag
-
         var arr = [];
         var re = new RegExp("\/{2} ?\/{2}#" + query.tag + "$", "i");
         var i = 0;
@@ -74,7 +75,7 @@ exports.onRequest = function(req, res){
           lines.length = end - 1;
           lines = lines.slice(start);
         }
-        var code = lines.join("\n");
+        code = lines.join("\n");
       } else {
         // skip tags and check for linestart and lineend
         var arr = [];
@@ -82,7 +83,7 @@ exports.onRequest = function(req, res){
           if (line.match(/\/{2} ?\/{2}#.*/) == null)
             arr.push(line);
         });
-        var code = arr.join("\n");
+        code = arr.join("\n");
 
         if (query.linestart && query.lineend) {
           lines = code.split("\n");
@@ -97,6 +98,9 @@ exports.onRequest = function(req, res){
 
       // Unindent block if needed
       if (query.outdent) {
+      	lines = code.split("\n");
+        
+        // remove spaces
         var min = Infinity;
         lines.forEach(function (line) {
           var match = line.match(/^ */);
@@ -108,6 +112,20 @@ exports.onRequest = function(req, res){
             return line.substr(min);
           });
         }
+
+        // remove tabs
+        min = Infinity;
+        lines.forEach(function (line) {
+        	var match = line.match(/^\t*/);
+        	var i = match[0].length;
+        	if (i < min) min = i;
+        });
+        if (min && min < Infinity) {
+          lines = lines.map(function (line) {
+            return line.substr(min);
+          });
+        }
+        
         code = lines.join("\n");
       }
 
