@@ -30,8 +30,8 @@ exports.onRequest = function(req, res){
         if (!(err instanceof Error)) {
           err = new Error(err);
         }
-        throw err;
         send(createSomethingWentWrong());
+        throw err;
         return;
       }
       cache[key] = js;
