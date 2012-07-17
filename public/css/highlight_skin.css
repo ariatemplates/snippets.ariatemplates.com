@@ -1,112 +1,136 @@
 /*
-  IR_Black style (c) Vasily Mikhailitchenko <vaskas@programica.ru>
+  skin for the code highlighter
 */
 
-pre code {
-  display: block; padding: 0.5em;
-  background: #333; color: #f8f8f8;
+.snippet {
+  margin-top: 25px;
+}
+
+.snippet pre {
+  border: 3px solid white;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+  margin: 8px 0 0 0;
   border-radius: 4px;
 }
 
-pre .shebang,
-pre .comment,
-pre .template_comment,
-pre .javadoc {
+.snippet pre code {
+  display: block; padding: 0.5em;
+  background: #333; color: #f8f8f8;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.snippet pre .shebang,
+.snippet pre .comment,
+.snippet pre .template_comment,
+.snippet pre .javadoc {
   color: #7c7c7c;
 }
 
-pre .commentBlock {
+.snippet pre .commentBlock {
   color: #FFFF80;
 }
 
-pre .keyword,
-pre .tag,
-pre .ruby .function .keyword,
-pre .tex .command {
+.snippet pre .keyword,
+.snippet pre .tag,
+.snippet pre .ruby .function .keyword,
+.snippet pre .tex .command {
   color: #37A3ED;
 }
 
-pre .function .keyword,
-pre .sub .keyword,
-pre .method,
-pre .list .title {
+.snippet pre .function .keyword,
+.snippet pre .sub .keyword,
+.snippet pre .method,
+.snippet pre .list .title {
   color: #37A3ED;
 }
 
-pre .function .params {
+.snippet pre .function .params {
   color: #FFFF80;
 }
 
-pre .string,
-pre .tag .value,
-pre .cdata,
-pre .filter .argument,
-pre .attr_selector,
-pre .apache .cbracket,
-pre .date {
+.snippet pre .string,
+.snippet pre .tag .value,
+.snippet pre .cdata,
+.snippet pre .filter .argument,
+.snippet pre .attr_selector,
+.snippet pre .apache .cbracket,
+.snippet pre .date {
   color: #80FF00;
 }
 
-pre .subst {
+.snippet pre .subst {
   color: #DAEFA3;
 }
 
-pre .regexp {
+.snippet pre .regexp {
   color: #E9C062;
 }
 
-pre .function .title,
-pre .sub .identifier,
-pre .pi,
-pre .decorator,
-pre .ini .title,
-pre .tex .special {
+.snippet pre .function .title,
+.snippet pre .sub .identifier,
+.snippet pre .pi,
+.snippet pre .decorator,
+.snippet pre .ini .title,
+.snippet pre .tex .special {
   color: #FFFFB6;
 }
 
-pre .class .title,
-pre .haskell .label,
-pre .constant,
-pre .smalltalk .class,
-pre .javadoctag,
-pre .yardoctag,
-pre .phpdoc,
-pre .nginx .built_in {
+.snippet pre .class .title,
+.snippet pre .haskell .label,
+.snippet pre .constant,
+.snippet pre .smalltalk .class,
+.snippet pre .javadoctag,
+.snippet pre .yardoctag,
+.snippet pre .phpdoc,
+.snippet pre .nginx .built_in {
   color: #FFFFB6;
 }
 
-pre .symbol,
-pre .ruby .symbol .string,
-pre .ruby .symbol .keyword,
-pre .ruby .symbol .keymethods,
-pre .number,
-pre .variable,
-pre .vbscript,
-pre .literal {
+.snippet pre .symbol,
+.snippet pre .ruby .symbol .string,
+.snippet pre .ruby .symbol .keyword,
+.snippet pre .ruby .symbol .keymethods,
+.snippet pre .number,
+.snippet pre .variable,
+.snippet pre .vbscript,
+.snippet pre .literal {
   color: #BBBEFF;
 }
 
-pre .css .tag {
+.snippet pre .css .tag {
   color: #96CBFE;
 }
 
-pre .css .rules .property,
-pre .css .id {
+.snippet pre .css .rules .property,
+.snippet pre .css .id {
   color: #FFFFB6;
 }
 
-pre .css .class {
+.snippet pre .css .class {
   color: #FFF;
 }
 
-pre .hexcolor {
+.snippet pre .hexcolor {
   color: #C6C5FE;
 }
 
-pre .number {
+.snippet pre .number {
   color:#FF73FD;
 }
 
-pre .tex .formula {
+.snippet pre .tex .formula {
   opacity: 0.7;
+}
+
+.snippet h5 {
+  color: #5092BD;
+  margin-bottom: 0px;
+  margin-top: -5px;
+}
+
+.snippet h5 strong {
+  color: #666666;
+  text-transform: uppercase;
+  padding-right: 10px;
 }
