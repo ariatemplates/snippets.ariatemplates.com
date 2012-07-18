@@ -67,15 +67,17 @@ exports.onRequest = function(req, res){
           if (line.match(re))
             positions.push(i);
         });
-
-        if (positions.length == 2) {
-          var start = positions[0];
-          var end = positions[1];
-
-          lines.length = end - 1;
-          lines = lines.slice(start);
-        }
-        code = lines.join("\n");
+        
+        if ((positions.length > 0) && (positions.length % 2 === 0)) {
+          var tmp = [];
+          for (var j=0; j<positions.length; j=j+2) {
+            var start = positions[j];
+            var end = positions[j + 1];
+            tmp = tmp.concat(lines.slice(start, end - 1), ["\n"]);            
+          }
+          tmp.pop();  // to remove the last \n          
+          code = tmp.join("\n");          
+        }        
       } else {
         // skip tags and check for linestart and lineend
         var arr = [];
@@ -103,29 +105,17 @@ exports.onRequest = function(req, res){
         // remove spaces
         var min = Infinity;
         lines.forEach(function (line) {
-          var match = line.match(/^ */);
-          var i = match[0].length;
-          if (i < min) min = i;
+          var match = line.match(/^([ \t]+).*/);
+          if (match != null) {
+            var i = match[1].length;            
+            if (i < min) min = i;
+          }
         });
         if (min && min < Infinity) {
           lines = lines.map(function (line) {
             return line.substr(min);
           });
         }
-
-        // remove tabs
-        min = Infinity;
-        lines.forEach(function (line) {
-        	var match = line.match(/^\t*/);
-        	var i = match[0].length;
-        	if (i < min) min = i;
-        });
-        if (min && min < Infinity) {
-          lines = lines.map(function (line) {
-            return line.substr(min);
-          });
-        }
-        
         code = lines.join("\n");
       }
 
