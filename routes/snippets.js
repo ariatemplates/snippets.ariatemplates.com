@@ -119,6 +119,16 @@ exports.onRequest = function(req, res){
         code = lines.join("\n");
       }
 
+      // Line Numbers
+      var lineNumbers = null;
+      if (query.numbers) {        
+        lines = code.split("\n");
+        if ((lines != null) && (lines.length>0))
+          lineNumbers = lines.length;
+        else if (lines.length === 0)
+          lineNumbers = 0;
+      }
+
       var supportedLang = ["1c", "actionscript", "apache", "at", "avrasm", "axapta", "bash", "clojure", "cmake", "coffeesc", "ript", "cpp", "cs", "css", "d", "delphi", "diff", "django", "dos", "erlang", "erlang-repl", "glsl", "go", "haskell", "http", "ini", "java", "javascript", "json", "lisp", "lua", "markdown", "matlab", "mel", "nginx", "objectivec", "parser3", "perl", "php", "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql", "tex", "vala", "vbscript", "vhdl", "xml"];
 
       if ((query.lang) && (supportedLang.indexOf(query.lang) != -1)) {
@@ -147,7 +157,7 @@ exports.onRequest = function(req, res){
       }
       var url = getOriginalUrl(),
           name = req.params.file,
-          js = createSnippet(url, name, html, query);
+          js = createSnippet(url, name, html, query, lineNumbers);
       callback(null, js);
     });
   }
@@ -162,7 +172,7 @@ exports.onRequest = function(req, res){
   }
 
   // Generate a custom compressed version of insertSnippet for the browser
-  function createSnippet(url, name, html, query) {
+  function createSnippet(url, name, html, query, lineNumbers) {
     var compressedHTML = html.replace(/<span class=/g, "<@").replace(/span>/g, "@>");
     var extension = Path.extname(req.params.file);
     var codeClass = "";
@@ -176,7 +186,7 @@ exports.onRequest = function(req, res){
     }
 
     var js = "(" + insertSnippet.toString() + ")" +
-      "(" + JSON.stringify(url) + "," + JSON.stringify(name) + "," + JSON.stringify(compressedHTML) + "," + JSON.stringify(codeClass) + "," + JSON.stringify(query) + ");";
+      "(" + JSON.stringify(url) + "," + JSON.stringify(name) + "," + JSON.stringify(compressedHTML) + "," + JSON.stringify(codeClass) + "," + JSON.stringify(query) + "," + JSON.stringify(lineNumbers) + ");";
     var ast = Uglify.parser.parse(js);
     ast = Uglify.uglify.ast_mangle(ast);
     ast = Uglify.uglify.ast_squeeze(ast);
@@ -199,7 +209,7 @@ exports.onRequest = function(req, res){
     return js;
   }
 
-  function insertSnippet(url, name, compressedHTML, codeClass, query) {
+  function insertSnippet(url, name, compressedHTML, codeClass, query, lineNumbers) {
     function Html(html) { this.html = html; }
     function jsonML(json) {
       // Render strings as text nodes
@@ -252,23 +262,38 @@ exports.onRequest = function(req, res){
         var html = compressedHTML.replace(/<@/g, "<span class=").replace(/@>/g, "span>");
         var json = [];
 
-        if (codeClass != "") {
-          json = [
-              "div",
-              {"class":"snippet"},
-                ["pre", {"class":"prettyprint"}, ["code", {"class": codeClass}, new Html(html)]]
-            ];
-        } else {
-          json = [
-              "div",
-              {"class":"snippet"},
-                ["pre", {"class":"prettyprint"}, ["code", new Html(html)]]
-            ];
-        }
+        json = ["div", {"class":"snippet"}];
 
+        if (codeClass != "") 
+          var preCode = ["pre", {"class":"prettyprint"}, ["code", {"class": codeClass}, new Html(html)]];
+        else
+          var preCode = ["pre", {"class":"prettyprint"}, ["code", new Html(html)]];
+
+        json.splice(2, 0, preCode);
+        
         if (query && !query.noheader) {
           var snippetHeader = ["h5", {"class": "filename"}, ["strong", "FILE"], "/" + name];
           json.splice(2, 0, snippetHeader);
+          
+        }
+
+        if (lineNumbers != null && lineNumbers != 0) {
+          if (query && !query.noheader)
+            var divLineNumbers = ["div", {"class": "linenumbers"}];
+          else
+            var divLineNumbers = ["div", {"class": "linenumbers nohead"}];
+
+          var ol = ["ol"];
+          var li = ["li"];
+          for (var cont = 1; cont <= lineNumbers; cont++)
+            ol.push(li);
+
+          divLineNumbers.push(ol);
+          
+          if (query && !query.noheader)
+            json.splice(3,0, divLineNumbers);
+          else
+            json.splice(2,0, divLineNumbers);
         }
 
         var snippet = jsonML(json);
