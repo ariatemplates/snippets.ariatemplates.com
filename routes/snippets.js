@@ -211,7 +211,7 @@ exports.onRequest = function(req, res){
 
   function insertSnippet(url, name, compressedHTML, codeClass, query, lineNumbers) {
     function Html(html) { this.html = html; }
-    function jsonML(json) {
+    function jsonML(json, prefixTags, suffixTags) {
       // Render strings as text nodes
       if (typeof json === 'string') return document.createTextNode(json);
       var node, first;
@@ -238,9 +238,9 @@ exports.onRequest = function(req, res){
         } else {
           // Functions are a hack to embed pre-generated html
           if (part instanceof Html) {
-            node.innerHTML = part.html;
+            node.innerHTML = prefixTags + part.html + suffixTags;
           } else {
-            node.appendChild(jsonML(part));
+            node.appendChild(jsonML(part, prefixTags, suffixTags));
           }
         }
         first = false;
@@ -264,10 +264,11 @@ exports.onRequest = function(req, res){
 
         json = ["div", {"class":"snippet"}];
 
-        if (codeClass != "") 
-          var preCode = ["pre", {"class":"prettyprint"}, ["code", {"class": codeClass}, new Html(html)]];
-        else
-          var preCode = ["pre", {"class":"prettyprint"}, ["code", new Html(html)]];
+        // IE7 discards newlines unless we provide <PRE>-wrapped content to innerHTML
+        // therefore it's better to provide it as a string
+        var prefixTags = '<pre class="prettyprint"><code class="' + (codeClass || '') + '">';
+        var suffixTags = '</code></pre>';
+        var preCode = ["div", new Html(html)];
 
         json.splice(2, 0, preCode);
         
@@ -296,7 +297,7 @@ exports.onRequest = function(req, res){
             json.splice(2,0, divLineNumbers);
         }
 
-        var snippet = jsonML(json);
+        var snippet = jsonML(json, prefixTags, suffixTags);
 
         // Replace script tag with the snippet
         tag.parentNode.replaceChild(snippet, tag);
