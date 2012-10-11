@@ -113,7 +113,7 @@ exports.onRequest = function(req, res){
         });
         if (min && min < Infinity) {
           lines = lines.map(function (line) {
-            return line.substr(min);
+            return line.substr(min - 1);
           });
         }
         code = lines.join("\n");
