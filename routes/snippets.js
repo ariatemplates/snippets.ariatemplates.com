@@ -233,12 +233,16 @@ exports.onRequest = function(req, res){
           for (var key in part) {
                 if (part.hasOwnProperty(key)) {
                   node.setAttribute(key, part[key]);
+                  if(key==="class"){
+                    node.setAttribute("className", part[key]);
                   }
+                }
               }
         } else {
           // Functions are a hack to embed pre-generated html
           if (part instanceof Html) {
-            node.innerHTML = prefixTags + part.html + suffixTags;
+            var indentation = "&nbsp;&nbsp;&nbsp;&nbsp;"; // IE7 discards leading tabs
+            node.innerHTML = prefixTags + part.html.replace(/\t/g, indentation) + suffixTags;
           } else {
             node.appendChild(jsonML(part, prefixTags, suffixTags));
           }
