@@ -141,6 +141,7 @@ exports.onRequest = function(req, res){
           case '.js':
           case '.tpl':
           case '.tml':
+          case '.cml':
             html = hljs.highlight("at", code).value;
             break;
           case '.css':
@@ -179,7 +180,8 @@ exports.onRequest = function(req, res){
     switch (extension) {
       case '.js': codeClass = "javascript"; break;
       case '.tpl':
-      case '.tml': codeClass = "at"; break;
+      case '.tml':
+      case '.cml': codeClass = "at"; break;
       case '.css': codeClass = "css"; break;
       case '.html': codeClass = "html"; break;
       default: codeClass = ""; break;
