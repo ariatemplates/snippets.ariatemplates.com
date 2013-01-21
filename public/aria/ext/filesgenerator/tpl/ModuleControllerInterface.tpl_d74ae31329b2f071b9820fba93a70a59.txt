@@ -1,8 +1,0 @@
-{TextTemplate {
-	$classpath: 'aria.ext.filesgenerator.tpl.ModuleControllerInterface',
-	$texts : {
-		interfaceTxtTpl : 'aria.ext.filesgenerator.tpl.Interface'
-	}
-}}
-{macro main()}${function(){data.$extends = "aria.templates.IModuleCtrl"}()}${interfaceTxtTpl.processTextTemplate(data)}{/macro}
-{/TextTemplate}
