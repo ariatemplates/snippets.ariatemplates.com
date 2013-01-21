@@ -26,6 +26,7 @@ Aria.tplScriptDefinition({
 		$dataReady: function() {
 			// Attach the SampleViewer datamodel under a "sw" namespace
 			this.$data = this.data["sw:cfg"];
+			this.url = window.location.toString();
 		},
 
 		/**

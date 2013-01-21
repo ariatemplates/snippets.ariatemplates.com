@@ -10,6 +10,7 @@
 		<div class="header">
 			<h5><strong>Sample</strong> ${$data.title}</h5>
 			<div class="actions">
+				<a class="tab" title="Open this sample in a new tab" target="_blank" href="${url}"></a>
 				<div class="run" title="Run this sample!" {on click "run"/}></div>
 				{if $data.data }
 				<div class="data" title="View Data model" {on click "datamodel"/}></div>
@@ -39,7 +40,9 @@
 			{section {
 				id: "contentwrapper",
 				type: 'div',
-				cssClass: $data.view,
+				attributes:{
+					classList: [$data.view]
+				},
 				macro: $data.view
 			}/}
 		{else/}
@@ -51,7 +54,7 @@
 	{macro load()}
 		{@aria:Gauge {
 			minValue: 0,
-			maxValue: ($data.sources.length - 1) * 100,
+			maxValue: $data.sources.length === 1 ? 100 : ($data.sources.length - 1) * 100,
 			currentValue: 0,
 			gaugeWidth: 400,
 			block: true,
@@ -114,7 +117,7 @@
 				<div class="files" title="View the other files" {on click "sources"/}></div>
 			{/if}
 			<h6>${getFileName($data.selected_source)}</h6>
-			<div class="highlight">
+			<div class="snippet">
 				${$data.loaded_sources[$data.selected_source]}
 			</div>
 		{/if}

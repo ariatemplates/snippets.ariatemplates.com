@@ -36,7 +36,7 @@
 			overflow: hidden;
 		}
 
-		.actions div {
+		.actions div, .actions a {
 			float: left;
 			display: block;
 			width: 20px;
@@ -47,6 +47,7 @@
 			padding: 0 !important;
 		}
 
+		.actions .tab { background-image: url(${cssFolderPath}/images/open_new_tab.png) }
 		.actions .sources 	{ background-image: url(${cssFolderPath}/images/script_code.png) }
 		.actions .data 		{ background-image: url(${cssFolderPath}/images/database_yellow.png) }
 		.actions .download 	{ background-image: url(${cssFolderPath}/images/compress.png) }
@@ -109,19 +110,33 @@
 			width: 100%; height: 100%;
 		}
 
-		.source .highlight {
-			overflow-y: auto;
-			position: absolute;
-			top: 22px; left: 3px;
-			bottom: 3px; right: 3px;
-			border-radius: 4px;
-		}
-
 		.source h6 {
 			color: #444;
 			margin: 0;
 			padding: 2px 5px 4px;
 		}
+
+		.source .snippet {
+			position: absolute;
+			top: 0; left: 3px;
+			bottom: 3px; right: 3px;
+			border-radius: 4px;
+			margin-top: 16px;
+		}
+
+		.snippet pre {
+			overflow-y: auto;
+			position: absolute;
+			top: 0; left: 0;
+			right: 0; bottom: 0;
+			background-color: #333333;
+			border: none;
+		}
+
+		.snippet code {
+
+		}
+
 
 		.source .files {
 			position: absolute;
