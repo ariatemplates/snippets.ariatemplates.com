@@ -61,7 +61,7 @@ Any new file, or changes to an existing one should be done in [ariatemplates/doc
 
  Then create the desciptor file:
 
- 	$ touch sample.yaml
+     $ touch sample.yaml
 
  Describe your sample:
 
