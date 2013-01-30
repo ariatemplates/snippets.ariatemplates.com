@@ -55,9 +55,37 @@ Any new file, or changes to an existing one should be done in [ariatemplates/doc
 
 * **Creating a new sample**
 
+ To create a new sample, you'll have to create a bunch of new files. A sample is composed of several source files and a desciptor file.
+
+ First create a new folder in the proper location that suits your needs. Your folder has to be located under the `samples` folder.
+
+ Then create the desciptor file:
+
+ 	$ touch sample.yaml
+
+ Describe your sample:
+
+```yaml
+title: Automatic Refresh
+template: samples.templates.refresh.automatic.AutomaticRefresh
+description: It shows how the Automatic Refresh works in aria templates.
+sources:
+- AutomaticRefresh.tpl
+- AutomaticRefreshScript.js
+- RefreshCSS.tpl.css
+data:
+     teams:
+     - name: 'England'
+       score: 0
+     - name: 'France'
+       score: 0
+```
+
+ Push the code! You're done, you can use it in your markdown file using the same iframe inclusion syntax that the one described above.
+
 * **Updating an existing snippet**
 
- Let's suppose you want to update a snippet because of a change in the api. Because we are maintaining several different versions of the documentation <span style="color: red">don't edit the original one !!</span>.
+ Let's suppose you want to update a snippet because of a change in the api. Because we are maintaining several different versions of the documentation /!\ don't edit the original one !! /!\ .
 
  Instead just create a new version of this snippets, in the same location with a new name (the simplest new name is to use the same one with a `_1` suffix.
 
