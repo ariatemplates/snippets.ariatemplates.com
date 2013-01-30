@@ -37,6 +37,12 @@ To insert a snippet in your markdown file you just need to write a script tag.
 
     <script src='http://snippets.ariatemplates.com/snippets/github.com/ariatemplates/documentation-code/snippets/core/beans/SimpleBean.js'></script>
 
+Several options could be specified directly through the given url to adjust the code:
+
+* `lang` to specify the language to be used by the highlighting library.
+* `outdent` to specify a number of character to remove at the beginning of each line to outdent the code.
+* `tag` to specify a tag name to be used to extract only a piece of code from the source.
+
 This example will embed the file `snippets/core/beans/SimpleBean.js` located in the repository `ariatemplates/documentation-code` hosted on `github.com`.
 
 
@@ -61,7 +67,7 @@ Any new file, or changes to an existing one should be done in [ariatemplates/doc
 
  Then create the desciptor file:
 
-     `$ touch sample.yaml`
+ `$ touch sample.yaml`
 
  Describe your sample:
 
