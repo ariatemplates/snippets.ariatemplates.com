@@ -65,21 +65,21 @@ Any new file, or changes to an existing one should be done in [ariatemplates/doc
 
  Describe your sample:
 
-```yaml
-title: Automatic Refresh
-template: samples.templates.refresh.automatic.AutomaticRefresh
-description: It shows how the Automatic Refresh works in aria templates.
-sources:
-- AutomaticRefresh.tpl
-- AutomaticRefreshScript.js
-- RefreshCSS.tpl.css
-data:
-     teams:
-     - name: 'England'
-       score: 0
-     - name: 'France'
-       score: 0
-```
+ ```yaml
+ title: Automatic Refresh
+ template: samples.templates.refresh.automatic.AutomaticRefresh
+ description: It shows how the Automatic Refresh works in aria templates.
+ sources:
+ - AutomaticRefresh.tpl
+ - AutomaticRefreshScript.js
+ - RefreshCSS.tpl.css
+ data:
+      teams:
+      - name: 'England'
+        score: 0
+      - name: 'France'
+        score: 0
+ ```
 
  Push the code! You're done, you can use it in your markdown file using the same iframe inclusion syntax that the one described above.
 
