@@ -3,7 +3,7 @@
 */
 
 .snippet {
-  margin-top: 25px;
+  margin-top: 5px;
 }
 
 .snippet pre {
@@ -125,8 +125,9 @@
 
 .snippet h5.filename {
   color: #5092BD;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   margin-top: -5px;
+  padding-top: 15px;
 }
 
 .snippet h5.filename strong {
