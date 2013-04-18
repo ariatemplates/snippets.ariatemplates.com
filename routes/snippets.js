@@ -58,7 +58,7 @@ exports.onRequest = function(req, res){
       if (query.tag) {
         // extract code between tag
         var arr = [];
-        var re = new RegExp("\/{2} ?\/{2}#" + query.tag + "$", "i");
+        var re = new RegExp("\/{2} ?\/{2}#" + query.tag);
         var i = 0;
         var positions = [];
 
@@ -107,13 +107,13 @@ exports.onRequest = function(req, res){
         lines.forEach(function (line) {
           var match = line.match(/^([ \t]+).*/);
           if (match != null) {
-            var i = match[1].length;            
+            var i = match[1].length;         
             if (i < min) min = i;
           }
         });
         if (min && min < Infinity) {
           lines = lines.map(function (line) {
-            return line.substr(min - 1);
+            return line.substr(min);
           });
         }
         code = lines.join("\n");
