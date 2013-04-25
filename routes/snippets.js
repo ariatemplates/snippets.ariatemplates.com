@@ -105,9 +105,11 @@ exports.onRequest = function(req, res){
         // remove spaces
         var min = Infinity;
         lines.forEach(function (line) {
-          var match = line.match(/^([ \t]+).*/);
-          var l = (match ? match[1].length : 0);
-          if (l < min) min = l;
+          if (line.trim().length > 0) {
+            var match = line.match(/^([ \t]+).*/);
+            var l = (match ? match[1].length : 0);
+            if (l < min) min = l;
+          }
         });
         if (min && min < Infinity) {
           lines = lines.map(function (line) {
