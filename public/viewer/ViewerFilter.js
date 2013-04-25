@@ -13,7 +13,7 @@ Aria.classDefinition({
         request.url = this.rootmap + request.url.substr(1);
       } else {
         var parts = this.parseUri(request.url);
-        if (parts.directory.indexOf(this.sample_folder) === 0) {
+        if (parts.directory.indexOf('/samples/') === 0) {
           request.url = parts.protocol + "://" + parts.host;
           if (parts.port !== "") {
             request.url += ":" + parts.port;

@@ -106,10 +106,8 @@ exports.onRequest = function(req, res){
         var min = Infinity;
         lines.forEach(function (line) {
           var match = line.match(/^([ \t]+).*/);
-          if (match != null) {
-            var i = match[1].length;         
-            if (i < min) min = i;
-          }
+          var l = (match ? match[1].length : 0);
+          if (l < min) min = l;
         });
         if (min && min < Infinity) {
           lines = lines.map(function (line) {

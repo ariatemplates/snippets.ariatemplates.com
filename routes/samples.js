@@ -29,7 +29,7 @@ exports.onRequest = function(req, res){
     }
 
     res.render("viewer", {
-      'ariatemplates': '1.3.4',
+      'ariatemplates': '1.3-7',
       'sample_id': "sample-"+sample_id,
       'title': yaml.title,
       'yaml': JSON.stringify(yaml),
