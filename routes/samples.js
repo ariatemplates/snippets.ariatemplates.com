@@ -14,7 +14,8 @@ exports.onRequest = function(req, res){
 
   httpCat(url, function(err, data) {
     if (err)  {
-      throw err;
+      // throw err;
+      res.status(404).send('Not found');
       return;
     }
     var yaml = Yaml.load(data);

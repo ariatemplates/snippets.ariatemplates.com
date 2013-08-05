@@ -32,7 +32,8 @@ exports.onRequest = function(req, res){
         if (!(err instanceof Error)) {
           err = new Error(err);
         }
-        throw err;
+        // throw err;
+        res.status(404).send('Not found');
         return;
       }
       cache[key] = data;

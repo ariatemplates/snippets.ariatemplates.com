@@ -31,7 +31,7 @@ exports.onRequest = function(req, res){
           err = new Error(err);
         }
         send(createSomethingWentWrong());
-        throw err;
+        // throw err;
         return;
       }
       cache[key] = js;
