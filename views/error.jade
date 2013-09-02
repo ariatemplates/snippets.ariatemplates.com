@@ -1,0 +1,90 @@
+!!! 5
+html
+  head
+    title Aria Templates Sample: #{title}
+    link(href='http://ariatemplates.com/styles/webfonts.css', rel='stylesheet')
+    link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
+    link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
+    style(type="text/css").
+      .live {
+        position: absolute;
+        top: 0; left: 5px;
+        bottom: 5px; right: 5px;
+      }
+      .live .result p {
+        text-align: center;
+        color: red;
+      }
+
+      .header {
+        position: relative;
+      }
+      .header h5 {
+        color: #5092BD;
+        margin-bottom: 5px;
+        padding-right: 100px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .header h5 strong {
+        text-transform: uppercase;
+        color: #666;
+      }
+        .actions {
+          position: absolute;
+          right: 4px;
+          top: -4px;
+          overflow: hidden;
+        }
+      .actions div, .actions a {
+        float: left;
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        padding: 0 !important;
+      }
+      .actions .refresh { background-image: url(/viewer/views/images/arrow_refresh.png) }
+      .content {
+        overflow: auto;
+
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        box-sizing: border-box;
+
+        border-radius: 4px;
+        border: 1px solid white;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+
+        position: absolute;
+        top: 30px; left: 0;
+        bottom: 0; right: 0;
+      }
+
+      .result {
+        padding: 5px;
+      }
+
+      code {
+        background-color: #F8F8F8;
+        border: 1px solid #DDDDDD;
+        border-radius: 3px 3px 3px 3px;
+        margin: 0 2px;
+        padding: 0 5px;
+        white-space: nowrap;
+        color: #999;
+      }
+
+  body
+    div(id=sample_id, class="live")
+      div.header
+        h5 <strong>Sample</strong> Loading Error
+        div.actions
+          a.refresh(href="#{key}", title="Refresh")
+      div.content
+        div.result
+          p: img(src="/oh-noes.jpg")
+          p Something went wrong or sample <code>#{key}</code> does not exist!

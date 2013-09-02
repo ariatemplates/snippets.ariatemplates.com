@@ -5,9 +5,9 @@ html
     link(href='http://ariatemplates.com/styles/webfonts.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
-    script(type='text/javascript', src='/aria/aria-templates-#{ariatemplates}.js')
-    script(type='text/javascript', src='/css/atdefskin-#{ariatemplates}.js')
-    script(type='text/javascript')
+    script(type='text/javascript', src='/aria/ariatemplates-#{ariatemplates}.js')
+    script(type='text/javascript', src='/aria/css/atskin-#{ariatemplates}.js')
+    script(type='text/javascript').
       aria.core.AppEnvironment.setEnvironment({
         defaultWidgetLibs: {
           aria: "aria.widgets.AriaLib",
@@ -22,7 +22,7 @@ html
           'sample_folder': "#{sample_folder}"
         }
       });
-    style(type="text/css")
+    style(type="text/css").
       .live {
         position: absolute;
         top: 0; left: 5px;
@@ -35,7 +35,7 @@ html
       }
   body
     div(id=sample_id, class="live")
-    script(type="text/javascript")
+    script(type="text/javascript").
       Aria.loadTemplate({
         classpath: 'viewer.views.Main',
         div: "#{sample_id}",

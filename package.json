@@ -1,15 +1,18 @@
 {
     "name": "snippets.ariatemplates.com",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "private": true,
     "repository": {
         "type": "git",
         "url": "git://github.com/ariatemplates/snippets.ariatemplates.com.git"
     },
     "dependencies": {
-        "express": "3.0.6",
-        "jade": "0.28.1",
+        "express": "3.3.6",
+        "jade": "0.35.0",
         "uglify-js": "1.3.2",
-        "js-yaml": "1.0.3"
+        "js-yaml": "2.1.0",
+        "request": "2.27.0",
+        "highlight.js": "7.3.0",
+        "humanize": "0.0.8"
     }
 }
