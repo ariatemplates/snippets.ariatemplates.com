@@ -47,7 +47,7 @@ var sampleReader = function(app) {
       }
 
       return {
-        'ariatemplates': '1.3.4',
+        'ariatemplates': '1.4.9',
         'sample_id': "sample-"+sample_id,
         'title': yaml.title,
         'yaml': JSON.stringify(yaml),
