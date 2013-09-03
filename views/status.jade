@@ -1,0 +1,74 @@
+!!! 5
+html
+  head
+    title Status Page - Aria Templates Snippets Server
+    link(href='http://ariatemplates.com/styles/webfonts.css', rel='stylesheet')
+    link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
+    link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
+    style(type="text/css").
+      body {
+        margin: 10px;
+      }
+
+  body
+    h1 Status Page - (ಠ_ಠ) Aria Templates Snippets Server
+
+    h2 Server's info
+    ul
+      li <strong>Uptime: </strong> #{uptime}
+      li <strong>Memory Usage:</strong>
+        ul
+          li Rss: #{humanize.filesize(mem.rss)}
+          li Heap: #{humanize.filesize(mem.heapUsed)} / #{humanize.filesize(mem.heapTotal)}
+
+    h2 Samples Tests
+
+    p: a(href="#{host}/samples/github.com/ariatemplates/documentation-code/samples/html/custom/pouet/", title="Open in a new tab", target="_blank") Non existing sample - 404
+    p: a(href="#{host}/samples/github.com/ariatemplates/documentation-code/samples/html/custom/gallery/", title="Open in a new tab", target="_blank") Gallery Custom Widget
+    p: a(href="#{host}/samples/github.com/ariatemplates/documentation-code/tree/master/samples/templates/refresh/automatic", title="Open in a new tab", target="_blank") Refresh Automatic
+
+    h2 Snippets Tests
+
+    h3 404 file
+    h4 ariatemplates/ariatemplates/pouet.js
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/pouet.js")
+    hr
+
+    h3 Existing file
+    h4 ariatemplates/ariatemplates/Gruntfile.js
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js")
+    hr
+
+    h3 Existing file form a branch
+    h4 ariatemplates/ariatemplates/tree/v1.4.4/Gruntfile.js
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/tree/v1.4.4/Gruntfile.js")
+    hr
+
+
+    h3 Tag
+    h4 #checkboxKeyDown
+    script(src="#{host}/snippets/github.com/ariatemplates/documentation-code/snippets/templates/domEvents/MainScript.js?tag=checkboxKeyDown")
+    hr
+
+    h3 Tag + Outdent
+    h4 #checkboxKeyDown
+    script(src="#{host}/snippets/github.com/ariatemplates/documentation-code/snippets/templates/domEvents/MainScript.js?tag=checkboxKeyDown&outdent=1")
+
+    h3 Line Start / Line End
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js?linestart=16&lineend=20")
+    hr
+
+    h3 No Header
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js?noheader=1")
+    hr
+
+    h3 No Header + Line Numbers + Line Start / End
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js?noheader=1&numbers=1&linestart=16&lineend=20")
+    hr
+
+    h3 Line Numbers
+    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js?numbers=1")
+    hr
+
+    h3 Template file
+    script(src="#{host}/snippets/github.com/ariatemplates/documentation-code/samples/templates/modifiers/ModifiersTemplate.tpl")

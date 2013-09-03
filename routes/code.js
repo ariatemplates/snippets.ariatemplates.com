@@ -1,99 +1,131 @@
 var Url = require('url'),
     Path = require('path'),
-    hljs = require('../highlight.js'),
-    grabber = require('../grabber/grabber');
+    hljs = require('highlight.js'),
+    request = require('request');
 
-var cache = {};
-var pending = {};
-exports.onRequest = function(req, res){
-  var user = req.params.user,
-      repo = req.params.repo,
-      file = req.params.file,
-      url_parts = Url.parse(req.url, true),
-      query = url_parts.query,
-      url = "https://raw.github.com/" + user + "/" + repo + "/master/" + file,
-      key = url;
 
-  if (cache[key]) {
-    var data = highlight(cache[key]);
-    send(data);
-    if (!pending[key]) {
-      pending[key] = true;
-      request(function (err, data) {
-        delete pending[key];
-        if (!err) {
-          cache[key] = data;
+var codeHighlighter = function(app) {
+
+  var request_options = {
+    method: "GET",
+    headers: {
+      "User-Agent": "SnippetsAT/" + app.get('version') + " (http://snippets.ariatemplates.com/)"
+    }
+  };
+
+  var cache = app.get('cache'),
+      logger = app.get('logger');
+
+  function middleware(req, res) {
+    var key = req.url,
+        user = req.params.user,
+        repo = req.params.repo,
+        file = req.params.file,
+        branch = "master",
+        query = Url.parse(key, true).query,
+        cached,
+        url;
+
+    if (file.indexOf("tree/") === 0) {
+      branch = file.split("/")[1];
+      file = file.split("/").slice(2).join("/");
+    }
+
+    url = "https://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + file;
+
+    function mimeType(path) {
+      if (path.indexOf(".png") === (path.length - ".png".length)) {
+        return "image/png";
+      } else if (path.indexOf(".jpg") === (path.length - ".jpg".length)) {
+        return "image/jpeg";
+      } else if (path.indexOf(".gif") === (path.length - ".gif".length)) {
+        return "image/gif";
+      } else if (path.indexOf(".js") === (path.length - ".js".length)) {
+        return "application/javascript";
+      }
+      return "text/html";
+    }
+
+    function handleImagesPath(text, user, repo, branch, file) {
+      var path = file.split("/");
+      path.pop();
+      var image_url = "http://raw.github.com/" + user + "/" + repo + "/" + branch + "/"+path.join("/");
+
+      text = text.replace(/url[\s]*\([\s"']*([^\)"']*)[\s"']*\)[\s]*/gm, function(match, url) {
+        if (url.indexOf("${cssFolderPath}") === 0) {
+          return "url(" + url.replace("${cssFolderPath}", image_url) + ") ";
+        }
+        if (url[0] == "/" || url.substr(0, 2) == "..") {
+          return "url(" + image_url + url + ") ";
         }
       });
+      return text;
     }
-  } else {
-    request(function (err, data) {
-      if (err) {
-        if (!(err instanceof Error)) {
-          err = new Error(err);
+
+    function send(data) {
+      res.header("Content-Type", mimeType(req.params.file));
+      res.header("Content-Length", Buffer.byteLength(data));
+      res.end(data);
+    }
+
+    function isCssTpl(path) {
+      return path.indexOf(".tpl.css") === (path.length - ".tpl.css".length);
+    }
+
+    function highlight(data) {
+      if (!query.highlight && isCssTpl(url)) {
+        data = handleImagesPath(data, user, repo, branch, file);
+      }
+      if (query.highlight) {
+        var lang = query.lang || "at";
+        data = hljs.highlight(lang, data).value;
+        data = "<pre class='prettyprint'><code class='"+ lang +"'>" + data + "</code></pre>";
+      }
+      return data;
+    }
+
+    function createSomethingWentWrong() {
+      return '<pre class="prettyprint"><code class=""><span class="keyword">(ಠ_ಠ) I\'m sorry Dave, I\'m afraid something went bad with your snippet!</span></code></pre>'
+    }
+
+    function process(url, cb) {
+      var options = JSON.parse(JSON.stringify(request_options));
+      options.url = url;
+      request(options, function(error, response, body) {
+        if (response.statusCode !== 200) {
+          cb("Status code: " + response.statusCode, createSomethingWentWrong());
+          return;
         }
-        // throw err;
-        res.status(404).send('Not found');
-        return;
-      }
-      cache[key] = data;
-      data = highlight(data);
-      send(data);
-    });
-  }
-
-  function request(callback) {
-    grabber.httpCat(url, callback);
-  }
-
-  function send(data) {
-    res.header("Content-Type", mimeType(req.params.file));
-    res.header("Content-Length", Buffer.byteLength(data));
-    res.end(data);
-  }
-
-  function handleImagesPath(text, user, repo, file) {
-    var path = file.split("/");
-    path.pop();
-    var image_url = "http://github.com/" + user + "/" + repo + "/raw/master/"+path.join("/")
-
-    text = text.replace(/url[\s]*\([\s"']*([^\)"']*)[\s"']*\)[\s]*/gm, function(match, url) {
-      if (url.indexOf("${cssFolderPath}") === 0) {
-        return "url(" + url.replace("${cssFolderPath}", image_url) + ") ";
-      }
-      if (url[0] == "/" || url.substr(0, 2) == "..") {
-        return "url(" + image_url + url + ") ";
-      }
-    });
-    return text;
-  }
-
-  function mimeType(path) {
-    if (path.indexOf(".png") === (path.length - ".png".length)) {
-      return "image/png";
-    } else if (path.indexOf(".jpg") === (path.length - ".jpg".length)) {
-      return "image/jpeg";
-    } else if (path.indexOf(".gif") === (path.length - ".gif".length)) {
-      return "image/gif";
-    } else if (path.indexOf(".js") === (path.length - ".js".length)) {
-      return "application/javascript";
+        cb(null, highlight(body));
+      });
     }
-    return "text/html"
+
+    // Main code execution
+    logger("CODE - Fetching %s", key);
+    cached = cache.get(key);
+
+    if (cached) {
+      logger("CODE - Already in cache");
+      send(cached);
+
+      logger("CODE - Regenerating cache item");
+      cache.del(key);
+      process(url, function(error, content) {
+        if (error) {
+          logger("CODE - Cache regeneration failed:", file);
+          return logger(error);
+        }
+        cache.put(key, content);
+      });
+    } else {
+      process(url, function(error, content) {
+        cache.put(key, content);
+        send(content);
+      });
+    }
   }
 
-  function isCssTpl(path) {
-    return path.indexOf(".tpl.css") === (path.length - ".tpl.css".length);
-  }
-
-  function highlight(data) {
-    if (!query.highlight && isCssTpl(url_parts.pathname)) {
-      data = handleImagesPath(data, user, repo, file);
-    }
-    if (query.highlight) {
-      var lang = query.lang || "at";
-      data = hljs.highlight(lang, data).value;
-      data = "<pre class='prettyprint'><code class=''>" + data + "</code></pre>";
-    }
-    return data;
-  }
+  return middleware;
 };
+
+module.exports = codeHighlighter;
