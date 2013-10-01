@@ -1,0 +1,6 @@
+Plain text mock content for file upload.
+This file should not be interpreted by
+the browser, especially tags like
+this one: <pre>pre tag</pre>
+and HTML entities: &lt; &gt;
+(IE <= 8 does not implement this correctly).
