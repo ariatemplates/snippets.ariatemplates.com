@@ -22,6 +22,12 @@ app.set('view engine', 'jade');
 app.set('version', version);
 app.set('cache', new Cache({debug: ('development' === app.get('env'))}));
 
+
+app.use(function(req, res, next) {
+  res.locals.host = (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host);
+  res.locals.atversion = req.query.atversion || "latest";
+  next();
+});
 app.use(express["static"](__dirname + '/public'));
 app.use(app.router);
 
@@ -46,7 +52,6 @@ app.get('/', function(req, res) {
 app.get('/status', function(req, res) {
   var humanize = res.locals.humanize = require('humanize');
   res.render("status", {
-    'host': (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host),
     'uptime': humanize.relativeTime(humanize.time() - process.uptime()),
     'mem': process.memoryUsage()
   });
@@ -59,9 +64,9 @@ app.get('/code/github.com/:user/:repo/:file([/\\-._a-zA-Z0-9]+.[a-zA-Z]+)', code
 
 
 var server = http.createServer(app);
-server.listen(3000);
-
-console.log("Server %s listening at http://localhost:3000/", process.title);
+server.listen(3000, function() {
+  console.log("Server %s listening at http://localhost:%s/", process.title, server.address().port);
+});
 
 process.on('uncaughtException', function (err) {
   console.error("===== UNCAUGHTEXCEPTION =====");

@@ -24,8 +24,9 @@ var sampleReader = function(app) {
         folder = req.params.folder,
         branch = "master",
         query = Url.parse(req.url, true).query,
-        url, cached,
-        hash = Crypto.createHash('md5').update(key).digest('hex').substr(0,8);
+        hash = Crypto.createHash('md5').update(key).digest('hex').substr(0,8),
+        url,
+        cached;
 
     if (folder.indexOf("tree/") === 0) {
       branch = folder.split("/")[1];
@@ -47,7 +48,6 @@ var sampleReader = function(app) {
       }
 
       return {
-        'ariatemplates': '1.4.11',
         'sample_id': "sample-"+sample_id,
         'title': yaml.title,
         'yaml': JSON.stringify(yaml),

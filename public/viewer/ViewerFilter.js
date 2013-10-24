@@ -4,6 +4,7 @@ Aria.classDefinition({
   $constructor: function(options) {
     this.$IOFilter.constructor.call(this);
 
+    this.host = options.host;
     this.rootmap = options.rootmap;
     this.sample_folder = options.sample_folder;
   },
@@ -14,9 +15,13 @@ Aria.classDefinition({
       } else {
         var parts = this.parseUri(request.url);
         if (parts.directory.indexOf('/samples/') === 0) {
-          request.url = parts.protocol + "://" + parts.host;
-          if (parts.port !== "") {
-            request.url += ":" + parts.port;
+          if (this.host.indexOf("http://localhost") === 0) {
+            request.url = this.host;
+          } else {
+            request.url = (parts.protocol || "http") + "://" + parts.host;
+            if (parts.port !== "") {
+              request.url += ":" + parts.port;
+            }
           }
           request.url += this.rootmap + parts.path.substr(1);
         }
