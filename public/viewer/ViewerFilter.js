@@ -14,17 +14,7 @@ Aria.classDefinition({
         request.url = this.rootmap + request.url.substr(1);
       } else {
         var parts = this.parseUri(request.url);
-        if (parts.directory.indexOf('/samples/') === 0) {
-          if (this.host.indexOf("http://localhost") === 0) {
-            request.url = this.host;
-          } else {
-            request.url = (parts.protocol || "http") + "://" + parts.host;
-            if (parts.port !== "") {
-              request.url += ":" + parts.port;
-            }
-          }
-          request.url += this.rootmap + parts.path.substr(1);
-        }
+        request.url = this.host + this.rootmap + parts.path.substr(1);
       }
     },
 
