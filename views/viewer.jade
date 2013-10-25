@@ -5,7 +5,12 @@ html
     link(href='http://ariatemplates.com/styles/webfonts.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
-    script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion}.js?skin')
+
+    //script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion}.js?skin')
+
+    script(type='text/javascript', src='/aria/ariatemplates-#{atversion}.js')
+    script(type='text/javascript', src='/aria/css/atskin-#{atversion}.js')
+
     script(type='text/javascript').
       aria.core.AppEnvironment.setEnvironment({
         defaultWidgetLibs: {

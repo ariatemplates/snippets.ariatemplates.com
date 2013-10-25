@@ -25,7 +25,7 @@ app.set('cache', new Cache({debug: ('development' === app.get('env'))}));
 
 app.use(function(req, res, next) {
   res.locals.host = (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host);
-  res.locals.atversion = req.query.atversion || "latest";
+  res.locals.atversion = /*req.query.atversion ||*/ "1.4.11";
   next();
 });
 app.use(express["static"](__dirname + '/public'));
