@@ -14,7 +14,9 @@ Aria.classDefinition({
         request.url = this.rootmap + request.url.substr(1);
       } else {
         var parts = this.parseUri(request.url);
-        request.url = this.host + this.rootmap + parts.path.substr(1);
+        if (parts.directory.indexOf('/samples/') === 0) {
+          request.url = this.host + this.rootmap + parts.path.substr(1);
+        }
       }
     },
 
