@@ -11,6 +11,7 @@ var samples = require('./routes/samples');
 var code = require('./routes/code');
 
 var Cache = require('./cache');
+var port = 3000;
 
 // Custom AT syntax file
 hljs.LANGUAGES['at'] = require('./highlight.at.js')(hljs);
@@ -20,24 +21,45 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('version', version);
-app.set('cache', new Cache({debug: ('development' === app.get('env'))}));
+
+app.set('port', port);
 
 
 app.use(function(req, res, next) {
   res.locals.host = (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host);
-  res.locals.atversion = /*req.query.atversion ||*/ "1.4.11";
+  res.locals.atversion = req.query.atversion || "1.4.11";
   next();
 });
 app.use(express["static"](__dirname + '/public'));
 app.use(app.router);
 
 app.configure('development', function() {
-  app.set('logger', function() {
-    console.log.apply(console, arguments);
-  });
+  var documentation_path = process.argv[2];
+  if (documentation_path) {
+    var doc_path_normalized = path.normalize(documentation_path);
+    var exists = fs.existsSync(doc_path_normalized);
+
+    if (exists) {
+      console.log('[Info] Documentation folder found at ' + doc_path_normalized);
+      app.set('logger', function() {
+        console.log.apply(console, arguments);
+      });
+
+      app.use('/documentation_code', express.static(doc_path_normalized));
+    } else {
+      console.log('[Error] No documentation folder found at ' + doc_path_normalized);
+      process.exit(1);
+    }
+
+    app.set('cache', { get : function () { return false; } });
+  } else {
+    console.log('[Error] You need to specify the documentation-code folder path');
+    process.exit(1);
+  }
 });
 
 app.configure('production', function() {
+  app.set('cache', new Cache());
   app.set('logger', function() {});
 });
 
@@ -64,7 +86,7 @@ app.get('/code/github.com/:user/:repo/:file([/\\-._a-zA-Z0-9]+.[a-zA-Z]+)', code
 
 
 var server = http.createServer(app);
-server.listen(3000, function() {
+server.listen(port, function() {
   console.log("Server %s listening at http://localhost:%s/", process.title, server.address().port);
 });
 

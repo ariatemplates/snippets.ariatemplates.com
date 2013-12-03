@@ -11,11 +11,11 @@ This nodejs application is managing 3 different services. All these services are
 
 * **snippets.ariatemplates.com/samples/**
  
- `samples` is in charge of extracting a complete sample and launching it in an iframe through the araitemplate sample viewer.
+ `samples` is in charge of extracting a complete sample and launching it in an iframe through the ariatemplate sample viewer.
 
 * **snippets.ariatemplates.com/snippets/**
 
- `snippets` is in charge of extracting a source file. caching it and return a self executable piece of javascript that will embed an highlighted version of it directly in an html page.
+ `snippets` is in charge of extracting a source file, caching it and return a self executable piece of javascript that will embed an highlighted version of it directly in an html page.
 
 
 How to use it
@@ -29,13 +29,15 @@ This service is private. It is used internally by the sample viewer, in order to
 
 To insert a sample in your markdown file you just need to embed it in a iframe.
 
-    <iframe class='samples' src='http://snippets.ariatemplates.com/samples/github.com/ariatemplates/documentation-code/samples/templates/templateScripts/clickhandler/'></iframe>
+    <iframe class='samples' src='/%SNIPPETS_SERVER_URL%/samples/github.com/ariatemplates/documentation-code/samples/templates/templateScripts/clickhandler/'></iframe>
+
+Using the /%SNIPPETS_SERVER_URL%/ prefix inside the URL, you'll be able to use and test locally your sample before pushing it and once you have pushed, the application will automatically update the url, using the production one.
 
 ### Snippets
 
 To insert a snippet in your markdown file you just need to write a script tag.
 
-    <script src='http://snippets.ariatemplates.com/snippets/github.com/ariatemplates/documentation-code/snippets/core/beans/SimpleBean.js'></script>
+    <script src='/%SNIPPETS_SERVER_URL%/snippets/github.com/ariatemplates/documentation-code/snippets/core/beans/SimpleBean.js'></script>
 
 Several options could be specified directly through the given url to adjust the code:
 
