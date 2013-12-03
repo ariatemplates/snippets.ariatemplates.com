@@ -15,8 +15,11 @@ var snippetBuilder = function(app) {
     }
   };
 
-  var cache = app.get('cache'),
-      logger = app.get('logger');
+  var mode = app.get('env'),
+      prod = mode == 'production',
+      cache = app.get('cache'),
+      logger = app.get('logger'),
+      port = app.get('port');
 
   function middleware(req, res) {
 
@@ -35,7 +38,11 @@ var snippetBuilder = function(app) {
       file = file.split("/").slice(2).join("/");
     }
 
-    url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
+    if (prod) {
+      url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
+    } else {
+      url = "http://localhost:" + port + "/documentation_code/" + file;
+    }
 
     function send(js) {
       var bytes = Buffer.byteLength(js);
@@ -242,7 +249,7 @@ var snippetBuilder = function(app) {
     logger("SNIPPET", "-", hash, "-", "Fetching", key);
     cached = cache.get(key);
 
-    if (cached) {
+    if (prod && cached) {
       logger("SNIPPET", "-", hash, "-", "Already in cache");
       send(cached);
 
@@ -257,7 +264,9 @@ var snippetBuilder = function(app) {
       });
     } else {
       process(url, function(error, content) {
-        cache.put(key, content);
+        if (prod) {
+          cache.put(key, content);
+        }
         send(content);
       });
     }

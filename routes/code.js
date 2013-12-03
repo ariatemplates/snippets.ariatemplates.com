@@ -13,12 +13,15 @@ var codeHighlighter = function(app) {
     }
   };
 
-  var cache = app.get('cache'),
-      logger = app.get('logger');
+  var mode = app.get('env'),
+      prod = mode == 'production',
+      cache = app.get('cache'),
+      logger = app.get('logger'),
+      port = app.get('port');
 
   function middleware(req, res) {
     var key = req.url,
-        user = req.params.user,
+        username = req.params.user,
         repo = req.params.repo,
         file = req.params.file,
         branch = "master",
@@ -30,8 +33,11 @@ var codeHighlighter = function(app) {
       branch = file.split("/")[1];
       file = file.split("/").slice(2).join("/");
     }
-
-    url = "https://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + file;
+    if (prod) {
+      url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
+    } else {
+      url = "http://localhost:" + port + "/documentation_code/" + file;
+    }
 
     function mimeType(path) {
       if (path.indexOf(".png") === (path.length - ".png".length)) {
@@ -47,9 +53,13 @@ var codeHighlighter = function(app) {
     }
 
     function handleImagesPath(text, user, repo, branch, file) {
-      var path = file.split("/");
+      var path = file.split("/"), image_url;
       path.pop();
-      var image_url = "http://raw.github.com/" + user + "/" + repo + "/" + branch + "/"+path.join("/");
+      if (prod) {
+        image_url = "http://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + path.join("/");
+      } else {
+        image_url = "http://localhost:" + port + "/documentation_code/" + path.join("/");
+      }
 
       text = text.replace(/url[\s]*\([\s"']*([^\)"']*)[\s"']*\)[\s]*/gm, function(match, url) {
         if (url.indexOf("${cssFolderPath}") === 0) {
@@ -74,7 +84,7 @@ var codeHighlighter = function(app) {
 
     function highlight(data) {
       if (!query.highlight && isCssTpl(url)) {
-        data = handleImagesPath(data, user, repo, branch, file);
+        data = handleImagesPath(data, username, repo, branch, file);
       }
       if (query.highlight) {
         var lang = query.lang || "at";
@@ -104,7 +114,7 @@ var codeHighlighter = function(app) {
     logger("CODE - Fetching %s", key);
     cached = cache.get(key);
 
-    if (cached) {
+    if (prod && cached) {
       logger("CODE - Already in cache");
       send(cached);
 
@@ -119,7 +129,9 @@ var codeHighlighter = function(app) {
       });
     } else {
       process(url, function(error, content) {
-        cache.put(key, content);
+        if (prod) {
+          cache.put(key, content);
+        }
         send(content);
       });
     }

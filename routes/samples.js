@@ -7,8 +7,11 @@ var Url = require('url'),
 
 
 var sampleReader = function(app) {
-  var cache = app.get('cache'),
-      logger = app.get('logger');
+  var mode = app.get('env'),
+      prod = mode == 'production',
+      cache = app.get('cache'),
+      logger = app.get('logger'),
+      port = app.get('port');
 
   var request_options = {
     method: "GET",
@@ -33,7 +36,11 @@ var sampleReader = function(app) {
       folder = folder.split("/").slice(2).join("/");
     }
 
-    url = "https://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + folder + "/sample.yml";
+    if (prod) {
+      url = "https://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + folder + "/sample.yml";
+    } else {
+      url = "http://localhost:" + port + "/documentation_code/" + folder + "/sample.yml";
+    }
 
     function processSample(data) {
       var yaml = Yaml.load(data);
@@ -58,11 +65,11 @@ var sampleReader = function(app) {
 
     // Main code execution
     logger("SAMPLE", "-", hash, "-", "Fetching", key);
-
     cached = cache.get(key);
     options = JSON.parse(JSON.stringify(request_options));
     options.url = url;
-    if (cached) {
+
+    if (prod && cached) {
       logger("SNIPPET - Already in cache");
       res.render("viewer", cached);
       request(options, function(error, response, body) {
@@ -87,11 +94,14 @@ var sampleReader = function(app) {
           });
           return;
         }
-        res.render("viewer", cache.put(key, processSample(body)));
+        if (prod) {
+          res.render("viewer", cache.put(key, processSample(body)));
+        } else {
+          res.render("viewer", processSample(body));
+        }
       });
     }
   }
-
   return middleware;
 };
 
