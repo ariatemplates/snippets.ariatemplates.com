@@ -27,7 +27,7 @@ app.set('port', port);
 
 app.use(function(req, res, next) {
   res.locals.host = (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host);
-  res.locals.atversion = req.query.atversion || "1.4.11";
+  res.locals.atversion = req.query.atversion || "1.4.13";
   next();
 });
 app.use(express["static"](__dirname + '/public'));
