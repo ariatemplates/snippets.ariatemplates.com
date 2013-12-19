@@ -151,7 +151,7 @@ Aria.classDefinition({
 			this.$data.selected_source = false;
 
 			for(var i = 0, l = keys.length; i < l; i++) {
-				if (keys[i].indexOf(file) != -1) {
+				if (keys[i].indexOf("/" + file) != -1) {
 					this.$data.selected_source = keys[i];
 				}
 			}
