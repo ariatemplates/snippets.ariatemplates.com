@@ -30,6 +30,14 @@ Aria.tplScriptDefinition({
 		},
 
 		/**
+		 * Check if the sample is run from within a frame, or is standalone
+		 * @return {Boolean}
+		 */
+		isFramed : function () {
+			return Aria.$window.self !== Aria.$window.top;
+		},
+
+		/**
 		 * Generate the classname for the sources file list.
 		 */
 		sourcesListOddEven: function(index) {

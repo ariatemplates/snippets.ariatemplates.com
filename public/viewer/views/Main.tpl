@@ -10,7 +10,9 @@
 		<div class="header">
 			<h5><strong>Sample</strong> ${$data.title}</h5>
 			<div class="actions">
+				{if isFramed()}
 				<a class="tab" title="Open this sample in a new tab" target="_blank" href="${url}"></a>
+				{/if}
 				<div class="run" title="Run this sample!" {on click "run"/}></div>
 				{if $data.data }
 				<div class="data" title="View Data model" {on click "datamodel"/}></div>
