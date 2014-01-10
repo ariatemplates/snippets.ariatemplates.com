@@ -13,6 +13,7 @@
         "js-yaml": "2.1.0",
         "request": "2.27.0",
         "highlight.js": "7.3.0",
-        "humanize": "0.0.8"
+        "humanize": "0.0.8",
+        "optimist": "0.6.0"
     }
 }
