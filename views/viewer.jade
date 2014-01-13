@@ -6,12 +6,12 @@ html
     link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
 
-    if (settings.env == 'production')
-      script(type='text/javascript', src='/aria/ariatemplates-#{atversion}.js')
-      script(type='text/javascript', src='/aria/css/atskin-#{atversion}.js')
+    if (atversion || !settings.frameworkPath)      
+      script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion || settings.frameworkVersion}.js?skin')
     else
-      script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion}.js?skin')
-
+      script(type='text/javascript', src='/aria/#{settings.frameworkFileName.replace("%version%", settings.frameworkVersion)}')
+      script(type='text/javascript', src='/aria/css/atskin-#{settings.frameworkVersion}.js')
+    
     script(type='text/javascript').
       aria.core.AppEnvironment.setEnvironment({
         defaultWidgetLibs: {
