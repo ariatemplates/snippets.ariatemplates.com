@@ -39,6 +39,7 @@ app.set('frameworkFileName', argv.frameworkFileName);
 app.use(function(req, res, next) {
   res.locals.host = (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host);
   res.locals.atversion = req.query.atversion;
+  res.locals.skin = req.query.skin;
   next();
 });
 app.use(express["static"](__dirname + '/public'));
