@@ -11,8 +11,7 @@ var sampleReader = function(app) {
       prod = mode == 'production',
       cache = app.get('cache'),
       logger = app.get('logger'),
-      port = app.get('port'),
-      documentationPath = app.get('documentationPath');    
+      port = app.get('port');
 
   var request_options = {
     method: "GET",
@@ -35,11 +34,11 @@ var sampleReader = function(app) {
     if (folder.indexOf("tree/") === 0) {
       branch = folder.split("/")[1];
       folder = folder.split("/").slice(2).join("/");
-    }      
+    }
 
-    if (!documentationPath) {     
+    if (prod) {
       url = "https://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + folder + "/sample.yml";
-    } else {      
+    } else {
       url = "http://localhost:" + port + "/documentation_code/" + folder + "/sample.yml";
     }
 

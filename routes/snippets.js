@@ -19,8 +19,7 @@ var snippetBuilder = function(app) {
       prod = mode == 'production',
       cache = app.get('cache'),
       logger = app.get('logger'),
-      port = app.get('port'),
-      documentationPath = app.get('documentationPath');
+      port = app.get('port');
 
   function middleware(req, res) {
 
@@ -39,7 +38,7 @@ var snippetBuilder = function(app) {
       file = file.split("/").slice(2).join("/");
     }
 
-    if (!documentationPath) {
+    if (prod) {
       url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
     } else {
       url = "http://localhost:" + port + "/documentation_code/" + file;

@@ -17,8 +17,7 @@ var codeHighlighter = function(app) {
       prod = mode == 'production',
       cache = app.get('cache'),
       logger = app.get('logger'),
-      port = app.get('port'),
-      documentationPath = app.get('documentationPath');
+      port = app.get('port');
 
   function middleware(req, res) {
     var key = req.url,
@@ -34,7 +33,7 @@ var codeHighlighter = function(app) {
       branch = file.split("/")[1];
       file = file.split("/").slice(2).join("/");
     }
-    if (!documentationPath) {
+    if (prod) {
       url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
     } else {
       url = "http://localhost:" + port + "/documentation_code/" + file;
@@ -56,7 +55,7 @@ var codeHighlighter = function(app) {
     function handleImagesPath(text, user, repo, branch, file) {
       var path = file.split("/"), image_url;
       path.pop();
-      if (!documentationPath) {
+      if (prod) {
         image_url = "http://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + path.join("/");
       } else {
         image_url = "http://localhost:" + port + "/documentation_code/" + path.join("/");

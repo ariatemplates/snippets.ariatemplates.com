@@ -5,15 +5,18 @@ html
     link(href='http://ariatemplates.com/styles/webfonts.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
-            
-    if (atversion || !settings.frameworkPath) 
-      skinVersion = (skin === 'flatskin' || skin === 'atflatskin') ? 'flatskin' : 'skin'
-      script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion || settings.frameworkVersion}.js?#{skinVersion}')
+
+    if (atversion || !settings.frameworkPath)
+      skinName = (skin === 'flatskin' || skin === 'atflatskin') ? 'flatskin' : 'skin'
+      script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion || settings.frameworkVersion}.js?#{skinName}')
     else
-      skinVersion = (skin) ? skin : "atskin-" + settings.frameworkVersion
+      skinName = ((skin) ? skin : "atskin")
+      if settings.frameworkVersioned
+         skinName = skinName + "-" + settings.frameworkVersion
+
       script(type='text/javascript', src='/aria/#{settings.frameworkFileName.replace("%version%", settings.frameworkVersion)}')
-      script(type='text/javascript', src='/aria/css/#{skinVersion}.js')
-    
+      script(type='text/javascript', src='/aria/css/#{skinName}.js')
+
     script(type='text/javascript').
       aria.core.AppEnvironment.setEnvironment({
         defaultWidgetLibs: {

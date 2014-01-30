@@ -22,7 +22,7 @@ var Cache = module.exports = (function() {
   Cache.prototype = {
     put: function(key, item) {
       var to_remove;
-      if (this.size() > this.max_size) {
+      if (this.size() >= this.max_size) {
         to_remove = stack.shift();
         log("[Cache]", "Size Limit Warning", "purging", to_remove);
         this.del(to_remove);
@@ -42,6 +42,7 @@ var Cache = module.exports = (function() {
     },
 
     del: function(key) {
+      stack.splice(stack.indexOf(key), 1)
       delete cache[key];
     },
 
@@ -53,6 +54,13 @@ var Cache = module.exports = (function() {
 
     size: function() {
       return stack.length;
+    },
+
+    stats: function() {
+      return {
+        status: "Cache Info: " + this.size() + " items.",
+        keys: JSON.stringify(stack, null, 2)
+      }
     }
   };
 
