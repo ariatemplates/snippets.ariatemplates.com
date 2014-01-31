@@ -9,17 +9,25 @@ html
       body {
         margin: 10px;
       }
+      .server-info, .server-info ul {
+        padding-left: 20px;
+      }
 
   body
     h1 Status Page - (ಠ_ಠ) Aria Templates Snippets Server
 
     h2 Server's info
-    ul
+    ul.server-info
       li <strong>Uptime: </strong> #{uptime}
       li <strong>Memory Usage:</strong>
         ul
           li Rss: #{humanize.filesize(mem.rss)}
           li Heap: #{humanize.filesize(mem.heapUsed)} / #{humanize.filesize(mem.heapTotal)}
+      li #{cache.status}
+        if cache.keys
+          ul
+            li
+              pre=cache.keys
 
     h2 Samples Tests
 
@@ -28,21 +36,21 @@ html
     p: a(href="#{host}/samples/github.com/ariatemplates/documentation-code/tree/master/samples/templates/refresh/automatic", title="Open in a new tab", target="_blank") Refresh Automatic
 
     h2 Snippets Tests
-
     h3 404 file
     h4 ariatemplates/ariatemplates/pouet.js
     script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/pouet.js")
     hr
 
-    h3 Existing file
-    h4 ariatemplates/ariatemplates/Gruntfile.js
-    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js")
-    hr
+    if settings.env !== "development"
+      h3 Existing file
+      h4 ariatemplates/ariatemplates/Gruntfile.js
+      script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/Gruntfile.js")
+      hr
 
-    h3 Existing file form a branch
-    h4 ariatemplates/ariatemplates/tree/v1.4.4/Gruntfile.js
-    script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/tree/v1.4.4/Gruntfile.js")
-    hr
+      h3 Existing file form a branch
+      h4 ariatemplates/ariatemplates/tree/v1.4.4/Gruntfile.js
+      script(src="#{host}/snippets/github.com/ariatemplates/ariatemplates/tree/v1.4.4/Gruntfile.js")
+      hr
 
 
     h3 Tag
