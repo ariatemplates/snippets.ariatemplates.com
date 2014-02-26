@@ -1,21 +1,26 @@
-var express = require('express'),
-    fs = require('fs'),
-    http = require('http'),
-    path = require('path'),
-    hljs = require('highlight.js'),
+var express  = require('express'),
+    fs       = require('fs'),
+    http     = require('http'),
+    path     = require('path'),
+    hljs     = require('highlight.js'),
+    optimist = require('optimist'),
+    request  = require('request'),
 
-    version = require('./package').version,
+    version  = require('./package').version,
 
     snippets = require('./routes/snippets'),
-    samples = require('./routes/samples'),
-    code = require('./routes/code'),
-    Cache = require('./cache'),
+    samples  = require('./routes/samples'),
+    code     = require('./routes/code'),
+    Cache    = require('./cache'),
 
-    port = 3000,
+    port     = 3000,
     versionPattern = "%version%";
 
 // Custom AT syntax file
 hljs.LANGUAGES['at'] = require('./highlight.at.js')(hljs);
+
+var CDN_GET_LATEST_URL = "http://cdn.ariatemplates.com/versions";
+var CDN_MAX_VERSION = false;
 
 var app = express();
 
@@ -34,8 +39,19 @@ app.configure(function() {
   });
   app.use(express["static"](__dirname + '/public'));
   app.use(app.router);
-
 });
+
+function serveDirectory(url, commandLinePath, pathName) {
+  var normalizedPath = path.normalize(commandLinePath);
+  var pathExists = fs.existsSync(normalizedPath);
+  if (pathExists) {
+    console.log('[Info] %s found at %s.',pathName, normalizedPath);
+    app.use(url, express.static(normalizedPath));
+  } else {
+    console.error('[Error] %s NOT found at %s.', pathName, normalizedPath);
+    process.exit(1);
+  }
+}
 
 // Development configuration
 app.configure('development', function() {
@@ -45,22 +61,8 @@ app.configure('development', function() {
     console.log.apply(console, arguments);
   });
 
-
-  var serveDirectory = function (url, commandLinePath, pathName) {
-    var normalizedPath = path.normalize(commandLinePath);
-    var pathExists = fs.existsSync(normalizedPath);
-    if (pathExists) {
-      console.log('[Info] %s found at %s.',pathName, normalizedPath);
-      app.use(url, express.static(normalizedPath));
-    } else {
-      console.error('[Error] %s NOT found at %s.', pathName, normalizedPath);
-      process.exit(1);
-    }
-  };
-
-  // Node library for option parsing: https://github.com/substack/node-optimist
   // To change the path of either samples or framework: node server.js --dp path/to/samples --fp path/to/framework
-  var argv = require('optimist')
+  var argv = optimist
     .alias('dp', 'documentationPath')
     .alias('fp', 'frameworkPath')
     .default('fp', false)
@@ -69,7 +71,7 @@ app.configure('development', function() {
     .alias('ff', 'frameworkFileName')
     .default('ff', 'ariatemplates-%version%.js')
     .demand(['dp'])
-    .usage('Usage: $0 --dp [string] -fp [string] --fv [string] --ff [string]')
+    .usage('Usage: $0 -dp [string] -fp [string] -fv [string] -ff [string]')
     .argv;
 
   app.set('documentationPath', argv.documentationPath);
@@ -95,11 +97,60 @@ app.configure('development', function() {
   }
 });
 
+function getLatestVersionFromCDN(cb) {
+  request.get(CDN_GET_LATEST_URL, function(error, response, body) {
+    var versions = JSON.parse(body),
+        max = versions.max,
+        latest = [max[0], max[1], max.substr(2)].join(".");
+    cb(latest);
+  });
+}
+
 // Production configuration
 app.configure('production', function() {
   app.set('cache', new Cache());
   app.set('logger', function() {});
   app.set('frameworkVersion', 'latest');
+
+  var argv = optimist
+    .alias('cdnsrc', 'cdnSourceFolder')
+    .default('cdnsrc', false)
+    .argv;
+
+  app.set('cdnFromSource', false);
+
+  // If the server is starting with a path to a cdn repo folder, we use it.
+  // Otherwise we use the cdn over http.
+  if (argv.cdnsrc) {
+    app.set('cdnFromSource', true);
+    app.get(/\/aria\/at(latest|(\d)[\-\.]?(\d)[\-\.]?(\d{1,2})).js/, function(req, res) {
+      if (req.params[0] === "latest") {
+        if (CDN_MAX_VERSION) {
+          return res.redirect("/aria/ariatemplates-"+CDN_MAX_VERSION+".js");
+        } else {
+          getLatestVersionFromCDN(function(version) {
+            CDN_MAX_VERSION = version;
+            res.redirect("/aria/ariatemplates-"+version+".js");
+          });
+        }
+      } else {
+        var version = [req.params[1], req.params[2], req.params[3]].join(".");
+        res.redirect("/aria/ariatemplates-"+version+".js");
+      }
+
+    });
+    app.get(/\/aria\/css\/(at(?:flat)?skin)-latest\.js/, function(req, res) {
+      if (CDN_MAX_VERSION) {
+        res.redirect("/aria/css/"+req.params[0]+"-" + CDN_MAX_VERSION + ".js");
+      } else {
+        getLatestVersionFromCDN(function(version) {
+          CDN_MAX_VERSION = version;
+          res.redirect("/aria/css/"+req.params[0]+"-" + version + ".js");
+        });
+      }
+    });
+    serveDirectory("/aria", path.join(argv.cdnsrc, "/aria"), "aria source folder (cdn repo)");
+  }
 });
 
 // ------------------------------------------------------------------------------
@@ -132,6 +183,16 @@ app.get('/snippets/github.com/:user/:repo/:file([/\\-._a-zA-Z0-9]+.[a-zA-Z]+)', 
 app.get('/samples/github.com/:user/:repo/:folder([/\\-_a-zA-Z0-9]+)', samples(app));
 app.get('/code/github.com/:user/:repo/:file([/\\-._a-zA-Z0-9]+.[a-zA-Z]+)', code(app));
 
+app.get('/updatelatest', function(req, res) {
+  if (req.ip == '127.0.0.1') {
+    getLatestVersionFromCDN(function(version) {
+      CDN_MAX_VERSION = version;
+    });
+    res.send(200);
+  } else {
+    res.send(401);
+  }
+});
 
 // ------------------------------------------------------------------------------
 // Server start
