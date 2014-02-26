@@ -8,7 +8,11 @@ html
 
     if (atversion || !settings.frameworkPath)
       skinName = (skin === 'flatskin' || skin === 'atflatskin') ? 'flatskin' : 'skin'
-      script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion || settings.frameworkVersion}.js?#{skinName}')
+      if (settings.cdnFromSource)
+        script(type='text/javascript', src='/aria/at#{atversion || settings.frameworkVersion}.js')
+        script(type='text/javascript', src='/aria/css/at#{skinName}-#{atversion || settings.frameworkVersion}.js')
+      else
+        script(type='text/javascript', src='http://cdn.ariatemplates.com/at#{atversion || settings.frameworkVersion}.js?#{skinName}')
     else
       skinName = ((skin) ? skin : "atskin")
       if settings.frameworkVersioned
