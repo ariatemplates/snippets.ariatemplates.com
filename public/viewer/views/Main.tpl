@@ -108,7 +108,7 @@
 	{macro datamodel()}
 		<div class="mw-geshi">
 			<div class="javascript source-javascript">
-				${indentDataModel(data)}
+				${indentDataModel(data)|escapeForHTML:false}
 			</div>
 		</div>
 	{/macro}
