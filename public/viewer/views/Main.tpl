@@ -120,7 +120,7 @@
 			{/if}
 			<h6>${getFileName($data.selected_source)}</h6>
 			<div class="snippet">
-				${$data.loaded_sources[$data.selected_source]}
+				${$data.loaded_sources[$data.selected_source]|escapeForHTML:false}
 			</div>
 		{/if}
 	{/macro}
