@@ -36,8 +36,12 @@ var sampleReader = function(app) {
       folder = folder.split("/").slice(2).join("/");
     }
 
+    if (folder.substr(-1) === "/") {
+      folder = folder.substring(0, folder.length - 1);
+    }
+
     if (prod) {
-      url = "https://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + folder + "/sample.yml";
+      url = "https://raw.githubusercontent.com/" + user + "/" + repo + "/" + branch + "/" + folder + "/sample.yml";
     } else {
       url = "http://localhost:" + port + "/documentation_code/" + folder + "/sample.yml";
     }
@@ -46,7 +50,7 @@ var sampleReader = function(app) {
       var yaml = Yaml.load(data);
       var sample_id = Crypto.createHash('md5').update(yaml.template).digest('hex').substr(0,8);
       var rootmap = "/code/github.com/" + user + "/" + repo + "/tree/" + branch + "/";
-      var sample_folder = "/" + (folder.substr(-1) === "/" ? folder.substr(0, folder.length - 1): folder );
+      var sample_folder = "/" + folder;
       if (query.skip) {
         var parts = sample_folder.substr(1).split("/");
         var prefix = parts.splice(0, query.skip);
@@ -73,22 +77,22 @@ var sampleReader = function(app) {
       logger("SNIPPET - Already in cache");
       res.render("viewer", cached);
       request(options, function(error, response, body) {
+        if (error) {
+          logger("SAMPLE", "-", hash, "-", "Error:", error);
+        }
         if (response.statusCode !== 200) {
           logger("SAMPLE", "-", hash, "-", "Error: Sample retrieval failed", key, error);
-          if (error) {
-            logger("SAMPLE", "-", hash, "-", "Error:", error);
-          }
           return;
         }
         cache.put(key, processSample(body));
       });
     } else {
       request(options, function(error, response, body) {
+        if (error) {
+          logger("SAMPLE", "-", hash, "-", "Error:", error);
+        }
         if (response.statusCode !== 200) {
           logger("SAMPLE", "-", hash, "-", "Error: Sample retrieval failed", key);
-          if (error) {
-            logger("SAMPLE", "-", hash, "-", "Error:", error);
-          }
           res.render("error", {
             key: key
           });

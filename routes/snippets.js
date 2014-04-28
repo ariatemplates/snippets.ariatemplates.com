@@ -39,7 +39,7 @@ var snippetBuilder = function(app) {
     }
 
     if (prod) {
-      url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
+      url = "https://raw.githubusercontent.com/" + username + "/" + repo + "/" + branch + "/" + file;
     } else {
       url = "http://localhost:" + port + "/documentation_code/" + file;
     }

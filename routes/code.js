@@ -34,7 +34,7 @@ var codeHighlighter = function(app) {
       file = file.split("/").slice(2).join("/");
     }
     if (prod) {
-      url = "https://raw.github.com/" + username + "/" + repo + "/" + branch + "/" + file;
+      url = "https://raw.githubusercontent.com/" + username + "/" + repo + "/" + branch + "/" + file;
     } else {
       url = "http://localhost:" + port + "/documentation_code/" + file;
     }
@@ -56,7 +56,7 @@ var codeHighlighter = function(app) {
       var path = file.split("/"), image_url;
       path.pop();
       if (prod) {
-        image_url = "http://raw.github.com/" + user + "/" + repo + "/" + branch + "/" + path.join("/");
+        image_url = "http://raw.githubusercontent.com/" + user + "/" + repo + "/" + branch + "/" + path.join("/");
       } else {
         image_url = "http://localhost:" + port + "/documentation_code/" + path.join("/");
       }
@@ -95,7 +95,7 @@ var codeHighlighter = function(app) {
     }
 
     function createSomethingWentWrong() {
-      return '<pre class="prettyprint"><code class=""><span class="keyword">(ಠ_ಠ) I\'m sorry Dave, I\'m afraid something went bad with your snippet!</span></code></pre>'
+      return '<pre class="prettyprint"><code class=""><span class="keyword">(ಠ_ಠ) I\'m sorry Dave, I\'m afraid something went bad with your snippet!</span></code></pre>';
     }
 
     function process(url, cb) {
