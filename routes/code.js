@@ -56,7 +56,7 @@ var codeHighlighter = function(app) {
       var path = file.split("/"), image_url;
       path.pop();
       if (prod) {
-        image_url = "http://raw.githubusercontent.com/" + user + "/" + repo + "/" + branch + "/" + path.join("/");
+        image_url = "https://raw.githubusercontent.com/" + user + "/" + repo + "/" + branch + "/" + path.join("/");
       } else {
         image_url = "http://localhost:" + port + "/documentation_code/" + path.join("/");
       }
