@@ -24,7 +24,9 @@
 		{section {
 			id: "content",
 			type: 'div',
-			cssClass: "content",
+			attributes: {
+				classList: ["content"]
+			},
 			bindRefreshTo: [
 				{ inside: $data, to: "view" },
 				{ inside: $data, to: "loading" }
