@@ -18,6 +18,15 @@ This nodejs application is managing 3 different services. All these services are
  `snippets` is in charge of extracting a source file, caching it and return a self executable piece of javascript that will embed an highlighted version of it directly in an html page.
 
 
+How to quickly start snippets server locally on localhost:3000
+-----------------------------------
+
+If you cloned everything from github to the same folder and you want to work with dev files:
+
+
+    node server.js --dp ../documentation-code/ --fp ../ariatemplates/src/ --ff bootstrap.js
+
+
 How to use it
 -------------
 

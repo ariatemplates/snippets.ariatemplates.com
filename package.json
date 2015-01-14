@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git://github.com/ariatemplates/snippets.ariatemplates.com.git"
   },
+  "scripts": {
+    "start-dev": "node server.js --dp ../documentation-code/ --fp ../ariatemplates/src/ --ff bootstrap.js"
+  },
   "dependencies": {
     "express": "3.3.6",
     "jade": "0.35.0",
