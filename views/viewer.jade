@@ -23,6 +23,9 @@ html
 
     script(type='text/javascript').
       aria.core.AppEnvironment.setEnvironment({
+        appSettings: {
+          waiAria: #{wai_aria}
+        },
         defaultWidgetLibs: {
           aria: "aria.widgets.AriaLib",
           html: "aria.html.HtmlLibrary"
