@@ -63,7 +63,8 @@ var sampleReader = function(app) {
         'title': yaml.title,
         'yaml': JSON.stringify(yaml),
         'rootmap': rootmap,
-        'sample_folder': sample_folder
+        'sample_folder': sample_folder,
+        'wai_aria': ["", "1", "true"].indexOf(query.wai) !== -1
       };
     }
 
