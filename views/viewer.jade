@@ -5,8 +5,11 @@ html
     link(href='http://ariatemplates.com/styles/webfonts.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/style.css', rel='stylesheet')
     link(href='http://ariatemplates.com/styles/snippets/highlight_skin.css', rel='stylesheet')
-
-    if (atversion || !settings.frameworkPath)
+    if (jawsSample)
+      script(type='text/javascript', src='/aria/ariatemplates-#{atJawsVersion}.js')
+      script(type='text/javascript', src='/aria/css/atskin-#{atJawsVersion}.js')
+        
+    else if (atversion || !settings.frameworkPath)
       skinName = (skin === 'flatskin' || skin === 'atflatskin') ? 'flatskin' : 'skin'
       if (settings.cdnFromSource)
         script(type='text/javascript', src='/aria/at#{atversion || settings.frameworkVersion}.js')

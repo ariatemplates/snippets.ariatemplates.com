@@ -64,7 +64,13 @@ var sampleReader = function(app) {
         'yaml': JSON.stringify(yaml),
         'rootmap': rootmap,
         'sample_folder': sample_folder,
-        'wai_aria': ["", "1", "true"].indexOf(query.wai) !== -1
+        'wai_aria': ["", "1", "true"].indexOf(query.wai) !== -1,
+        'jawsSample': (
+          res.locals.atJawsVersion &&
+          yaml.categories &&
+          Array.isArray(yaml.categories) &&
+          yaml.categories.join("|").indexOf("Wai-aria")
+        )
       };
     }
 

@@ -16,6 +16,17 @@ var express  = require('express'),
     port     = 3000,
     versionPattern = "%version%";
 
+var atJawsVersion = false;
+try {
+   atJawsVersion = require('./jaws-version.json').version;
+} catch(e) {
+
+} finally {
+  if (atJawsVersion) {
+    console.log('[Info] Specific Jaws version detected: %s.', atJawsVersion);
+  }
+}
+
 // Custom AT syntax file
 hljs.LANGUAGES['at'] = require('./highlight.at.js')(hljs);
 
@@ -35,6 +46,7 @@ app.configure(function() {
     res.locals.host = (req.secure ? "https://" : "http://") + (req.header('x-forwarded-host') ? req.header('x-forwarded-host') : req.headers.host);
     res.locals.atversion = req.query.atversion;
     res.locals.skin = req.query.skin;
+    res.locals.atJawsVersion = atJawsVersion;
     next();
   });
   app.use(express["static"](__dirname + '/public'));
